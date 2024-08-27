@@ -8,7 +8,6 @@ import jakarta.persistence.Table;
 @Table
 @Entity(name = "users")
 public class User extends BaseEntity {
-
     @Column(unique = true)
     private String username;
     @Column(unique = true)
