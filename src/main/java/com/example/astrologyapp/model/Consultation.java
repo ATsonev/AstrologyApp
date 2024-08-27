@@ -2,7 +2,7 @@ package com.example.astrologyapp.model;
 
 import com.example.astrologyapp.model.base.BaseEntity;
 import com.example.astrologyapp.model.enums.PaymentMethod;
-import com.example.astrologyapp.model.enums.Status;
+import com.example.astrologyapp.model.enums.ConsultationStatus;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -11,7 +11,7 @@ import java.util.Set;
 @Entity(name = "consultations")
 public class Consultation extends BaseEntity {
 
-    private Status status;
+    private ConsultationStatus status;
     @Column(name = "payment_method")
     private PaymentMethod paymentMethod;
     @ManyToMany
@@ -26,11 +26,11 @@ public class Consultation extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"))
     private Set<Product> products;
 
-    public Status getStatus() {
+    public ConsultationStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(ConsultationStatus status) {
         this.status = status;
     }
 

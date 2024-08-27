@@ -1,26 +1,36 @@
 package com.example.astrologyapp.model;
 
 import com.example.astrologyapp.model.base.BaseEntity;
-import com.example.astrologyapp.model.enums.ProductType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
+
+import javax.print.DocFlavor;
 
 @Table
 @Entity(name = "products")
 public class Product extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
-    private ProductType type;
+    private String type;
     private double price;
     private int duration;
+    private String comment;
 
-    public ProductType getType() {
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getType() {
         return type;
     }
 
-    public void setType(ProductType type) {
+    public void setType(String type) {
         this.type = type;
     }
 

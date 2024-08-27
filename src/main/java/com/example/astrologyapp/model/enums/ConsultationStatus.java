@@ -1,6 +1,6 @@
 package com.example.astrologyapp.model.enums;
 
-public enum Status {
+public enum ConsultationStatus {
 
     DONE, WAITING_PAYMENT, CANCELLED
 
