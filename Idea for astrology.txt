@@ -1,0 +1,25 @@
+I. Classes
+
+1. Customer
+- ID
+- firstName;
+- lastName;
+- Date and hour of birth
+- Birth city
+- phone
+- skype
+- facebook/Instagram
+- date and hour of registration
+- comment
+
+2. Product
+- type - (Taro, Astrology)
+- price
+- duration
+
+3. Consultations
+- Customer
+- Product
+- Status
+- Payment type - (cash, bank, free, revolut)
+
