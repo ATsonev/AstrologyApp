@@ -4,18 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <title>ZenPlanner</title>
 </head>
 <body>
 <header>
-    <button class="logo-button"></button>
-    <div class="header-buttons">
-        <a href="/appointment">Book an appointment</a>
-        <a href="/contacts">Contacts</a>
-        <a sec:authorize="isAnonymous()" href="/login">Login</a>
-        <a sec:authorize="isAnonymous()" href="/register">Register</a>
-        <a sec:authorize="isAuthenticated()" href="/logout">Logout</a>
+    <div class="header-content">
+        <button class="logo-button"></button>
+        <div class="header-buttons">
+            <a href="/">Home</a>
+            <a sec:authorize="isAuthenticated()" href="/appointment">My appointments</a>
+            <a href="/appointment">Book an appointment</a>
+            <a href="/contacts">Contacts</a>
+            <a sec:authorize="isAnonymous()" href="/login">Login</a>
+            <a sec:authorize="isAnonymous()" href="/register">Register</a>
+            <a sec:authorize="isAuthenticated()" href="/logout">Logout</a>
+        </div>
     </div>
 </header>
+
+<footer class="footer">
+    <div class="footer-content-wrapper">
+        <div class="footer-logo">
+            <img src="/images/logo.png" alt="Logo" class="logo-image">
+        </div>
+        <div class="footer-nav">
+            <a href="/make-appointment" class="footer-btn">Make an Appointment</a>
+            <a href="/appointments" class="footer-btn">My Appointments</a>
+            <a sec:authorize="isAnonymous()" href="/login" class="footer-btn">Login</a>
+        </div>
+        <div class="footer-contact">
+            <p>Contacts:</p>
+            <p>🌍 Sofia, zhk. Iztok 148</p>
+            <p>📞 +0888888888</p>
+        </div>
+    </div>
+    <div class="text-center mt-3">
+        <div class="footer-background footer-text">
+            &copy; Tsonev team 2024. All rights reserved.
+        </div>
+    </div>
+</footer>
 </body>
 </html>
