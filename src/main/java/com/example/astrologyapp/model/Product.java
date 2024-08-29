@@ -12,7 +12,6 @@ import javax.print.DocFlavor;
 @Entity(name = "products")
 public class Product extends BaseEntity {
 
-    @Enumerated(EnumType.STRING)
     private String type;
     private double price;
     private int duration;
