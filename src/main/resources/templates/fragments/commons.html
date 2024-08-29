@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>ZenPlanner</title>
+</head>
+<body>
+<header>
+    <button class="logo-button"></button>
+    <div class="header-buttons">
+        <a href="/appointment">Book an appointment</a>
+        <a href="/contacts">Contacts</a>
+        <a sec:authorize="isAnonymous()" href="/login">Login</a>
+        <a sec:authorize="isAnonymous()" href="/register">Register</a>
+        <a sec:authorize="isAuthenticated()" href="/logout">Logout</a>
+    </div>
+</header>
+</body>
+</html>

@@ -1,72 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZenPlanner</title>
     <style>
-        body {
-            background-color: #c9e1c1;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #4a7c59;
-            padding: 10px 20px;
-            color: white;
-        }
-        .logo-button {
-            background-image: url("/static/images/logo.png");
-            width: 30px;
-            height: 40px;
-        }
-        .auth-buttons {
-            display: flex;
-            gap: 10px;
-        }
-        .auth-buttons button {
-            background-color: #ffffff;
-            border: none;
-            color: #4a7c59;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .auth-buttons button:hover {
-            background-color: #d0e5cd;
-        }
-        .main-content {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-        .main-content h1 {
-            font-size: 48px;
-            color: #4a7c59;
-        }
+
     </style>
 </head>
 <body>
-
-<header>
-    <button class="logo-button"></button>
-    <div class="auth-buttons">
-        <button th:href="@{/login}">Login</button>
-        <button th:href="@{/register}">Register</button>
-    </div>
-</header>
-
+<header th:replace="fragments/commons::header"></header>
 <div class="main-content">
     <h1>ZenPlanner</h1>
 </div>
-
 </body>
 </html>

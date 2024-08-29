@@ -1,6 +1,7 @@
 package com.example.astrologyapp.model;
 
 import com.example.astrologyapp.model.base.BaseEntity;
+import com.example.astrologyapp.model.enums.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -13,6 +14,7 @@ public class User extends BaseEntity {
     @Column(unique = true)
     private String email;
     private String password;
+    private UserRole role;
 
     public String getUsername() {
         return username;
