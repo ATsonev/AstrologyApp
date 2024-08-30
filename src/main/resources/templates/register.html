@@ -80,12 +80,20 @@
             background-color: #3b6249;
         }
 
+        .error {
+            color: red;
+            margin-top: 5px;
+        }
+
     </style>
 </head>
 <body>
 <div class="registration-container">
     <img src="/images/register.png" alt="Register">
     <h2>Register New User</h2>
+    <div style="text-align: center" th:if="${errorMessage}" class="error">
+        <p th:text="${errorMessage}"></p>
+    </div>
     <form class="registration-form"
           th:object="${registerUserDto}"
           th:action="@{/register}"
@@ -94,31 +102,49 @@
             <div class="form-group">
                 <label for="firstName">First Name</label>
                 <input type="text" id="firstName" name="firstName" th:value="*{firstName}" required>
+                <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"
+                     class="error">First name Error
+                </div>
             </div>
             <div class="form-group">
                 <label for="lastName">Last Name</label>
                 <input type="text" id="lastName" name="lastName" th:value="*{lastName}" required>
+                <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"
+                     class="error">Last name Error
+                </div>
             </div>
         </div>
         <div class="form-row">
             <div class="form-group">
                 <label for="phone">Phone Number</label>
                 <input type="tel" id="phone" name="phone" th:value="*{phone}" required>
+                <div th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"
+                     class="error">Phone Error
+                </div>
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" th:value="*{email}" required>
+                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                     class="error">Email Error
+                </div>
             </div>
         </div>
         <div class="form-row">
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
+                <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
+                     class="error">Password Error
+                </div>
             </div>
             <div class="form-group">
                 <label for="confirmPassword">Confirm Password</label>
                 <input type="password" id="confirmPassword" name="confirmPassword" required>
             </div>
+        </div>
+        <div style="text-align: center" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"
+             class="error">ConfirmPassword Error
         </div>
         <button type="submit" class="register-button">Register</button>
     </form>

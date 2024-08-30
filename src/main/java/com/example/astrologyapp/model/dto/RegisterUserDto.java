@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.Length;
 @PasswordMatches(message = "The passwords doesn't match")
 public class RegisterUserDto{
 
-    @NotBlank(message = "The first name should be atleast 3 characters")
+    @NotBlank(message = "The first name cannot be empty")
     @Length(min = 3, max = 50, message = "The first name should be between 3 and 50 characters")
     private String firstName;
     @NotBlank(message = "The last name should be atleast 3 characters")

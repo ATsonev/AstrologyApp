@@ -1,6 +1,9 @@
 package com.example.astrologyapp.web.controller;
 
+import com.example.astrologyapp.model.dto.LoginDto;
 import com.example.astrologyapp.model.dto.RegisterUserDto;
+import com.example.astrologyapp.service.UserService;
+import com.example.astrologyapp.util.customException.ExistingUserException;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,8 +15,24 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class UserController {
 
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
     @GetMapping("/login")
-    public String login() {
+    public String login(Model model) {
+        if(!model.containsAttribute("loginFormDto")){
+            model.addAttribute("loginFormDto", new LoginDto());
+        }
+        return "login";
+    }
+
+    @PostMapping("/login")
+    public String loginUser(@Valid LoginDto loginFormDto, BindingResult bindingResult,
+                            RedirectAttributes redirectAttributes) {
+
         return "login";
     }
 
@@ -31,6 +50,13 @@ public class UserController {
         if(bindingResult.hasErrors()){
             redirectAttributes.addFlashAttribute("registerUserDto", registerUserDto);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.registerUserDto", bindingResult);
+            return "redirect:/register";
+        }
+        try{
+            userService.registerUser(registerUserDto);
+        }catch (ExistingUserException e){
+            redirectAttributes.addFlashAttribute("registerUserDto", registerUserDto);
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/register";
         }
         return "redirect:/";

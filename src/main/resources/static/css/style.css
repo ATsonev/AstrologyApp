@@ -1,5 +1,11 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow-x: hidden;
+}
+
 body {
-    background-color: white;
+    background-color: #fffff8;
     margin: 0;
     font-family: Arial, sans-serif;
     display: flex;
@@ -10,7 +16,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: white;
+    background-color: #fffff8;
     padding: 10px 20px;
     color: #212f3c;
     flex-wrap: wrap;
@@ -59,7 +65,7 @@ header {
     text-align: center;
 }
 .header-buttons a:hover {
-    color: #1F618D;
+    color: #8db4c4;
 }
 .main-content {
     flex: 1;
@@ -151,7 +157,7 @@ header {
 
 .footer-btn {
     background-color: transparent;
-    color: white;
+    color: #fdfce8;
     font-size: 14px;
     padding: 7px 12px;
     border-radius: 5px;
@@ -162,17 +168,17 @@ header {
 }
 
 .footer-btn:hover {
-    color: #1F618D;
+    color: #f6eeb0;
 }
 
 .footer-contact {
     text-align: left;
-    color: white;
+    color: #fdfce8;
 }
 
 .footer-background {
     background-color: transparent;
-    color: white;
+    color: #fdfce8;
     padding: 10px;
 }
 
