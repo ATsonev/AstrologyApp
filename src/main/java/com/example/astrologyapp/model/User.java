@@ -13,6 +13,8 @@ public class User extends BaseEntity {
     private String username;
     @Column(unique = true)
     private String email;
+    @Column(unique = true)
+    private String phone;
     private String password;
     private UserRole role;
 
