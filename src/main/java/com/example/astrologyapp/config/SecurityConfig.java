@@ -28,7 +28,7 @@ public class SecurityConfig {
                 .formLogin(formLogin ->
                         formLogin
                                 .loginPage("/login")
-                                .usernameParameter("email")
+                                .usernameParameter("username")
                                 .passwordParameter("password")
                                 .defaultSuccessUrl("/", true)
                                 .failureForwardUrl("/login-error")
@@ -47,6 +47,7 @@ public class SecurityConfig {
     public AppUserDetailsService userDetailsService(UserRepository userRepository) {
         return new AppUserDetailsService(userRepository);
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {

@@ -2,13 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
     <title>Title</title>
     <style>
         body {
             background-color: #f4f4f4;
             font-family: Arial, sans-serif;
             display: flex;
-            justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
@@ -21,6 +21,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             max-width: 500px;
             width: 100%;
+            margin: 1%;
         }
 
         .registration-container img {
@@ -88,6 +89,7 @@
     </style>
 </head>
 <body>
+<header th:replace="fragments/commons::header"></header>
 <div class="registration-container">
     <img src="/images/register.png" alt="Register">
     <h2>Register New User</h2>
@@ -149,5 +151,6 @@
         <button type="submit" class="register-button">Register</button>
     </form>
 </div>
+<footer th:replace="fragments/commons::footer"></footer>
 </body>
 </html>

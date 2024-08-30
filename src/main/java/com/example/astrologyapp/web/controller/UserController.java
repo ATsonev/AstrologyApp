@@ -32,8 +32,12 @@ public class UserController {
     @PostMapping("/login")
     public String loginUser(@Valid LoginDto loginFormDto, BindingResult bindingResult,
                             RedirectAttributes redirectAttributes) {
-
-        return "login";
+        if(bindingResult.hasErrors()){
+            redirectAttributes.addFlashAttribute("registerUserDto", loginFormDto);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.loginFormDto", bindingResult);
+            return "redirect:/login";
+        }
+        return "redirect:/";
     }
 
     @GetMapping("/register")
