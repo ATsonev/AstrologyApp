@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
+    <style>
+        .calendar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        .calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .prev-button, .next-button {
+            background-color: #212f3c;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 5px;
+        }
+
+        .calendar-dates {
+            overflow: hidden;
+            display: flex;
+            width: 80%;
+        }
+
+        .dates-container {
+            display: flex;
+            gap: 10px;
+            transition: transform 0.3s ease-in-out;
+            white-space: nowrap;
+        }
+
+        .date-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 80px; /* Increase width to accommodate larger dates */
+            text-align: center;
+        }
+
+        .date-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px; /* Increase width to match the new size */
+            height: 80px; /* Increase height to match the new size */
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            cursor: pointer;
+            user-select: none;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+
+        .date-box .day-number {
+            font-size: 24px; /* Increase font size for larger date numbers */
+            font-weight: bold;
+            color: #333;
+        }
+
+        .date-box.selected {
+            background-color: #212f3c;
+            color: white;
+        }
+
+        .date-box.selected .day-number {
+            color: white; /* Ensure day number text color changes when selected */
+        }
+
+        .month {
+            font-size: 14px; /* Adjust font size if needed */
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px; /* Space between month and date box */
+        }
+
+        .weekday {
+            font-size: 14px; /* Adjust font size if needed */
+            font-weight: bold;
+            color: #777;
+            margin-top: 5px; /* Space between date box and day of the week */
+        }
+
+        .slots {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .slots button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .slots button.taken {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .slots button.available:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<header th:replace="fragments/commons::header"></header>
+<div class="main-content">
+    <div class="calendar-wrapper">
+        <div class="calendar-header">
+            <button class="prev-button" onclick="scrollCalendar('left')">&#8249;</button>
+            <div class="calendar-dates">
+                <div id="calendar" class="dates-container">
+                    <!-- Dates will be dynamically inserted here -->
+                </div>
+            </div>
+            <button class="next-button" onclick="scrollCalendar('right')">&#8250;</button>
+        </div>
+        <div id="slots-container" class="slots">
+            <!-- Time slots will be rendered here based on the selected date -->
+        </div>
+    </div>
+</div>
+<footer th:replace="fragments/commons::footer"></footer>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const calendarContainer = document.getElementById('calendar');
+        const today = new Date();
+        const daysToShow = 90;
+
+        for (let i = 0; i < daysToShow; i++) {
+            const date = new Date();
+            date.setDate(today.getDate() + i);
+
+            const dateWrapper = document.createElement('div');
+            dateWrapper.className = 'date-wrapper';
+
+            const month = document.createElement('div');
+            month.className = 'month';
+            month.textContent = date.toLocaleDateString('en-US', { month: 'short' });
+
+            const dateBox = document.createElement('div');
+            dateBox.className = 'date-box';
+            dateBox.innerHTML = `
+                <div class="day-number">${date.getDate()}</div>
+            `;
+            dateBox.addEventListener('click', () => {
+                selectDate(dateBox, date);
+            });
+
+            const weekday = document.createElement('div');
+            weekday.className = 'weekday';
+            weekday.textContent = date.toLocaleDateString('en-US', { weekday: 'short' });
+
+            dateWrapper.appendChild(month);
+            dateWrapper.appendChild(dateBox);
+            dateWrapper.appendChild(weekday);
+
+            calendarContainer.appendChild(dateWrapper);
+        }
+
+        selectDate(calendarContainer.querySelector('.date-box'), today);
+    });
+
+    function selectDate(element, date) {
+        const allDates = document.querySelectorAll('.date-box');
+        allDates.forEach(date => date.classList.remove('selected'));
+
+        element.classList.add('selected');
+
+        fetchAvailableSlots(date.toISOString().split('T')[0]);
+    }
+
+    function fetchAvailableSlots(date) {
+        fetch(`/api/available-slots?date=${date}`)
+            .then(response => response.json())
+            .then(slots => renderSlots(slots));
+    }
+
+    function renderSlots(slots) {
+        const slotsContainer = document.getElementById('slots-container');
+        slotsContainer.innerHTML = '';  // Clear previous slots
+
+        slots.forEach(slot => {
+            const slotElement = document.createElement('button');
+            slotElement.textContent = slot.time;
+
+            if (slot.taken) {
+                slotElement.classList.add('taken');
+                slotElement.disabled = true;
+            } else {
+                slotElement.classList.add('available');
+                slotElement.addEventListener('click', () => bookAppointment(slot.time));
+            }
+
+            slotsContainer.appendChild(slotElement);
+        });
+    }
+
+    function scrollCalendar(direction) {
+        const calendar = document.getElementById('calendar');
+        const scrollAmount = 120;
+        const currentTransform = calendar.style.transform || 'translateX(0px)';
+        const currentX = parseInt(currentTransform.split('(')[1].split('px')[0]);
+
+        if (direction === 'left') {
+            calendar.style.transform = `translateX(${Math.min(currentX + scrollAmount, 0)}px)`;
+        } else if (direction === 'right') {
+            calendar.style.transform = `translateX(${currentX - scrollAmount}px)`;
+        }
+    }
+
+    function bookAppointment(time) {
+        // Logic to book the appointment
+        alert(`Booking appointment for ${time}`);
+    }
+</script>
+</body>
+</html>
