@@ -77,7 +77,9 @@
 
         .error {
             color: red;
+            text-align: center;
             margin-top: 5px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -87,9 +89,7 @@
     <div style="flex: 1" class="login-container">
         <!--<img src="/images/login.png" alt="Login">-->
         <h2>Login</h2>
-        <div style="text-align: center" th:if="${errorMessage}" class="error">
-            <p th:text="${errorMessage}"></p>
-        </div>
+        <div class="error" th:if="${param.error}" th:text="${param.error}"></div>
         <form class="login-form"
               th:object="${loginFormDto}"
               th:action="@{/login}"

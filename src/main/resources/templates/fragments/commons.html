@@ -18,15 +18,14 @@
             <a href="/contacts">Contacts</a>
             <a sec:authorize="isAnonymous()" href="/login">Login</a>
             <a sec:authorize="isAnonymous()" href="/register">Register</a>
-            <form id="logout-form" th:action="@{/logout}" method="post" style="display:none;">
-            </form>
-            <a sec:authorize="isAuthenticated()" href="#" onclick="document.getElementById('logout-form').submit(); return false;">
-                Logout
-            </a>
-           <!-- <form th:method="post"
-                  th:action="@{/logout}">
-                <input class="btn btn-link" type="submit" value="Logout"/>
-            </form>-->
+            <form id="logout-form" th:action="@{/logout}" method="post" style="display:none;"></form>
+            <div sec:authorize="isAuthenticated()" class="dropdown">
+                <a href="#" class="dropdown-toggle">Profile ▼</a>
+                <div class="dropdown-content">
+                    <a href="/profile/edit">Edit Profile</a>
+                    <a href="#" onclick="document.getElementById('logout-form').submit(); return false;">Logout</a>
+                </div>
+            </div>
         </div>
     </div>
 </header>

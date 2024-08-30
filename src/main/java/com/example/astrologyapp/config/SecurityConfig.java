@@ -2,7 +2,6 @@ package com.example.astrologyapp.config;
 
 import com.example.astrologyapp.repository.UserRepository;
 import com.example.astrologyapp.service.AppUserDetailsService;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,6 +13,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+
+    public SecurityConfig(CustomAuthenticationFailureHandler customAuthenticationFailureHandler) {
+        this.customAuthenticationFailureHandler = customAuthenticationFailureHandler;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -31,7 +36,8 @@ public class SecurityConfig {
                                 .usernameParameter("username")
                                 .passwordParameter("password")
                                 .defaultSuccessUrl("/", true)
-                                .failureForwardUrl("/login-error")
+                                .failureForwardUrl("/login-error=true")
+                                .failureHandler(customAuthenticationFailureHandler)
                 )
                 .logout(
                         logout ->
@@ -47,7 +53,6 @@ public class SecurityConfig {
     public AppUserDetailsService userDetailsService(UserRepository userRepository) {
         return new AppUserDetailsService(userRepository);
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {

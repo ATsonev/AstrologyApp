@@ -33,7 +33,7 @@ public class UserController {
     public String loginUser(@Valid LoginDto loginFormDto, BindingResult bindingResult,
                             RedirectAttributes redirectAttributes) {
         if(bindingResult.hasErrors()){
-            redirectAttributes.addFlashAttribute("registerUserDto", loginFormDto);
+            redirectAttributes.addFlashAttribute("loginFormDto", loginFormDto);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.loginFormDto", bindingResult);
             return "redirect:/login";
         }
