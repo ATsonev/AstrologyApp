@@ -10,21 +10,18 @@ import java.util.Set;
 @Table
 @Entity(name = "consultations")
 public class Consultation extends BaseEntity {
-
+    private String type;
+    private double price;
+    private int duration;
     private ConsultationStatus status;
-    @Column(name = "payment_method")
-    private PaymentMethod paymentMethod;
+
     @ManyToMany
     @JoinTable(name = "consultations_customers",
             joinColumns = @JoinColumn(name = "consultation_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "customer_id", referencedColumnName = "id"))
     private Set<Customer> customers;
-
-    @ManyToMany
-    @JoinTable(name = "consultations_products",
-            joinColumns = @JoinColumn(name = "consultation_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"))
-    private Set<Product> products;
+    @OneToMany(mappedBy = "consultation")
+    private Set<Appointment> appointments;
 
     public ConsultationStatus getStatus() {
         return status;
@@ -32,14 +29,6 @@ public class Consultation extends BaseEntity {
 
     public void setStatus(ConsultationStatus status) {
         this.status = status;
-    }
-
-    public PaymentMethod getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(PaymentMethod paymentMethod) {
-        this.paymentMethod = paymentMethod;
     }
 
     public Set<Customer> getCustomers() {
@@ -50,11 +39,35 @@ public class Consultation extends BaseEntity {
         this.customers = customers;
     }
 
-    public Set<Product> getProducts() {
-        return products;
+    public String getType() {
+        return type;
     }
 
-    public void setProducts(Set<Product> products) {
-        this.products = products;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public Set<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(Set<Appointment> appointments) {
+        this.appointments = appointments;
     }
 }

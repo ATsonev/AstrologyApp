@@ -12,7 +12,7 @@ I. Classes
 - date and hour of registration
 - comment
 
-2. Product
+2. Appointment
 - type - (Taro, Astrology)
 - price
 - duration
