@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Table
-@Entity(name = "products")
+@Entity(name = "appointments")
 public class Appointment extends BaseEntity {
 
     @Column(name = "date_and_time")
@@ -20,6 +20,9 @@ public class Appointment extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "consultation_id", referencedColumnName = "id")
     private Consultation consultation;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
     public String getComment() {
         return comment;

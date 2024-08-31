@@ -117,4 +117,5 @@ public class User extends BaseEntity {
     public void setCityOfBirth(String cityOfBirth) {
         this.cityOfBirth = cityOfBirth;
     }
+
 }

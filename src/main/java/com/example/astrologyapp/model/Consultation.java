@@ -17,14 +17,15 @@ public class Consultation extends BaseEntity {
     @JoinTable(name = "consultations_customers",
             joinColumns = @JoinColumn(name = "consultation_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "customer_id", referencedColumnName = "id"))
-    private Set<Customer> customers;
+    private Set<User> customers;
     @OneToMany(mappedBy = "consultation")
     private Set<Appointment> appointments;
-    public Set<Customer> getCustomers() {
+
+    public Set<User> getCustomers() {
         return customers;
     }
 
-    public void setCustomers(Set<Customer> customers) {
+    public void setCustomers(Set<User> customers) {
         this.customers = customers;
     }
 
