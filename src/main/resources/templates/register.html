@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <title>Title</title>
     <style>
         body {
@@ -134,6 +136,22 @@
         </div>
         <div class="form-row">
             <div class="form-group">
+                <label for="cityOfBirth">City of birth</label>
+                <input type="text" id="cityOfBirth" name="cityOfBirth" th:value="*{cityOfBirth}">
+                <div th:if="${#fields.hasErrors('cityOfBirth')}" th:errors="*{cityOfBirth}"
+                     class="error">City of birth Error
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="dateAndHourOfBirth">Date and hour of birth</label>
+                <input id="dateAndHourOfBirth" name="dateAndHourOfBirth" th:value="*{dateAndHourOfBirth}">
+                <div th:if="${#fields.hasErrors('dateAndHourOfBirth')}" th:errors="*{dateAndHourOfBirth}"
+                     class="error">City of birth Error
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
                 <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
@@ -152,5 +170,13 @@
     </form>
 </div>
 <footer th:replace="fragments/commons::footer"></footer>
+
+<script>
+    flatpickr("#dateAndHourOfBirth", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: true
+    });
+</script>
 </body>
 </html>
