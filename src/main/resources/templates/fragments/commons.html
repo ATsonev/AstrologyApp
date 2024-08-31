@@ -13,7 +13,7 @@
         <button class="logo-button" onclick="window.location.href='/'"></button>
         <div class="header-buttons">
             <a href="/">Home</a>
-            <a sec:authorize="isAuthenticated()" href="/appointment">My appointments</a>
+            <a sec:authorize="isAuthenticated()" href="/my-appointments">My appointments</a>
             <a href="/appointment">Book an appointment</a>
             <a href="/contacts">Contacts</a>
             <a sec:authorize="isAnonymous()" href="/login">Login</a>
@@ -22,7 +22,7 @@
             <div sec:authorize="isAuthenticated()" class="dropdown">
                 <a href="#" class="dropdown-toggle">Profile ▼</a>
                 <div class="dropdown-content">
-                    <a href="/profile/edit">Edit Profile</a>
+                    <a href="/edit-profile">Edit Profile</a>
                     <a href="#" onclick="document.getElementById('logout-form').submit(); return false;">Logout</a>
                 </div>
             </div>
@@ -37,7 +37,7 @@
         </div>
         <div class="footer-nav">
             <a href="/make-appointment" class="footer-btn">Make an Appointment</a>
-            <a href="/appointments" class="footer-btn">My Appointments</a>
+            <a href="/appointment" class="footer-btn">My Appointments</a>
             <a sec:authorize="isAnonymous()" href="/login" class="footer-btn">Login</a>
         </div>
         <div class="footer-contact">

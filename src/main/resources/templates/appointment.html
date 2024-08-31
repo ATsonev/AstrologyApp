@@ -12,7 +12,7 @@
             flex-direction: column;
             align-items: center;
             width: 80%;
-            margin: 20px auto;
+            margin: 10% auto 20px;
         }
 
         .calendar-header {
@@ -30,6 +30,7 @@
             padding: 10px;
             cursor: pointer;
             font-size: 18px;
+            margin: 20px;
             border-radius: 5px;
         }
 
@@ -127,18 +128,19 @@
 <body>
 <header th:replace="fragments/commons::header"></header>
 <div class="main-content">
+    <h1>Book an appointment</h1>
     <div class="calendar-wrapper">
         <div class="calendar-header">
             <button class="prev-button" onclick="scrollCalendar('left')">&#8249;</button>
             <div class="calendar-dates">
                 <div id="calendar" class="dates-container">
-                    <!-- Dates will be dynamically inserted here -->
+
                 </div>
             </div>
             <button class="next-button" onclick="scrollCalendar('right')">&#8250;</button>
         </div>
         <div id="slots-container" class="slots">
-            <!-- Time slots will be rendered here based on the selected date -->
+
         </div>
     </div>
 </div>
@@ -220,7 +222,7 @@
 
     function scrollCalendar(direction) {
         const calendar = document.getElementById('calendar');
-        const scrollAmount = 120;
+        const scrollAmount = 450;
         const currentTransform = calendar.style.transform || 'translateX(0px)';
         const currentX = parseInt(currentTransform.split('(')[1].split('px')[0]);
 
@@ -232,7 +234,6 @@
     }
 
     function bookAppointment(time) {
-        // Logic to book the appointment
         alert(`Booking appointment for ${time}`);
     }
 </script>
