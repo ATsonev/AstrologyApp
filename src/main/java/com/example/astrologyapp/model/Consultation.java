@@ -13,8 +13,6 @@ public class Consultation extends BaseEntity {
     private String type;
     private double price;
     private int duration;
-    private ConsultationStatus status;
-
     @ManyToMany
     @JoinTable(name = "consultations_customers",
             joinColumns = @JoinColumn(name = "consultation_id", referencedColumnName = "id"),
@@ -22,15 +20,6 @@ public class Consultation extends BaseEntity {
     private Set<Customer> customers;
     @OneToMany(mappedBy = "consultation")
     private Set<Appointment> appointments;
-
-    public ConsultationStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ConsultationStatus status) {
-        this.status = status;
-    }
-
     public Set<Customer> getCustomers() {
         return customers;
     }

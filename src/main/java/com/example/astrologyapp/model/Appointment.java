@@ -1,6 +1,7 @@
 package com.example.astrologyapp.model;
 
 import com.example.astrologyapp.model.base.BaseEntity;
+import com.example.astrologyapp.model.enums.ConsultationStatus;
 import com.example.astrologyapp.model.enums.PaymentMethod;
 import jakarta.persistence.*;
 
@@ -15,6 +16,7 @@ public class Appointment extends BaseEntity {
     private String comment;
     @Column(name = "payment_method")
     private PaymentMethod paymentMethod;
+    private ConsultationStatus status;
     @ManyToOne
     @JoinColumn(name = "consultation_id", referencedColumnName = "id")
     private Consultation consultation;
@@ -49,5 +51,13 @@ public class Appointment extends BaseEntity {
 
     public void setConsultation(Consultation consultation) {
         this.consultation = consultation;
+    }
+
+    public ConsultationStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ConsultationStatus status) {
+        this.status = status;
     }
 }

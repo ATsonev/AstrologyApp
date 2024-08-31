@@ -1,4 +1,4 @@
 package com.example.astrologyapp.service;
 
-public interface CustomerService {
+public interface AppointmentService {
 }
