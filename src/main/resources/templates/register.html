@@ -136,17 +136,17 @@
         </div>
         <div class="form-row">
             <div class="form-group">
-                <label for="cityOfBirth">City of birth</label>
+                <label for="cityOfBirth">City of birth (optional)</label>
                 <input type="text" id="cityOfBirth" name="cityOfBirth" th:value="*{cityOfBirth}">
                 <div th:if="${#fields.hasErrors('cityOfBirth')}" th:errors="*{cityOfBirth}"
                      class="error">City of birth Error
                 </div>
             </div>
             <div class="form-group">
-                <label for="dateAndHourOfBirth">Date and hour of birth</label>
+                <label for="dateAndHourOfBirth">Date and hour of birth (optional)</label>
                 <input id="dateAndHourOfBirth" name="dateAndHourOfBirth" th:value="*{dateAndHourOfBirth}">
                 <div th:if="${#fields.hasErrors('dateAndHourOfBirth')}" th:errors="*{dateAndHourOfBirth}"
-                     class="error">City of birth Error
+                     class="error">Date and hour of birth Error
                 </div>
             </div>
         </div>
