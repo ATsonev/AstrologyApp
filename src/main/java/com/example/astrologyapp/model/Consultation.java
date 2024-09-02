@@ -10,7 +10,7 @@ import java.util.Set;
 @Table
 @Entity(name = "consultations")
 public class Consultation extends BaseEntity {
-    private String type;
+    private String name;
     private double price;
     private int duration;
     @ManyToMany
@@ -29,12 +29,12 @@ public class Consultation extends BaseEntity {
         this.customers = customers;
     }
 
-    public String getType() {
-        return type;
+    public String getName() {
+        return name;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public double getPrice() {

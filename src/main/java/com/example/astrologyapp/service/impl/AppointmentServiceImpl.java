@@ -24,7 +24,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<LocalTime> getAvailableSlots(String date) {
+    public List<LocalTime> getAvailableSlots(String date, int duration) {
         LocalDate localDate = LocalDate.parse(date);
         List<LocalDateTime> availableSlots = getSlots(localDate);
 
@@ -48,8 +48,28 @@ public class AppointmentServiceImpl implements AppointmentService {
             availableTimes.add(availableSlot.toLocalTime());
         }
 
-        return availableTimes;
+        return  getAvailableSlots(availableTimes, duration);
+    }
 
+    public List<LocalTime> getAvailableSlots(List<LocalTime> slots, int duration){
+        List<LocalTime> availableSlots = new ArrayList<>();
+        var result = Double.valueOf(duration);
+        var requiredSlots = Math.ceil(result / 30);
+
+        for (int i = 0; i <= slots.size() - requiredSlots; i++) {
+            boolean isSlotAvailable = true;
+            for (int j = 0; j < requiredSlots - 1; j++) {
+                if (!slots.get(i + j).plusMinutes(30).equals(slots.get(i + j + 1))) {
+                    isSlotAvailable = false;
+                    break;
+                }
+            }
+            if (isSlotAvailable) {
+                availableSlots.add(slots.get(i));
+            }
+        }
+
+        return availableSlots;
     }
 
     public List<LocalDateTime> getSlots(LocalDate date) {

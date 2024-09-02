@@ -13,7 +13,24 @@
             flex-direction: column;
             align-items: center;
             width: 80%;
-            margin: 10% auto 20px;
+            margin: 5% auto 20px;
+        }
+
+        .calendar-wrapper.blur {
+            filter: blur(5px);
+            pointer-events: none; /* Prevents any interactions */
+            position: relative;
+        }
+
+        .calendar-wrapper.blur::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.7); /* Optional: Adds a semi-transparent overlay */
+            z-index: 1; /* Ensures the overlay is on top */
         }
 
         .calendar-header {
@@ -110,26 +127,66 @@
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
-            background-color: #4CAF50;
+            background-color: #212f3c;
             color: white;
             cursor: pointer;
             transition: background-color 0.3s;
         }
 
-        .slots button.taken {
-            background-color: #ccc;
-            cursor: not-allowed;
+        .slots button.available {
+            background-color: #212f3c;
         }
 
         .slots button.available:hover {
-            background-color: #45a049;
+            background-color: #8db4c4;
         }
+
+        .slots button.taken {
+            background-color: #ccc;
+            color: #666;
+            cursor: not-allowed;
+        }
+        .consultation-select {
+            display: flex;
+            margin-bottom: 20px;
+            align-items: center;
+            margin-top: 2%;
+        }
+
+        .consultation-select label {
+            font-size: 22px;
+            margin-right: 10px;
+            white-space: nowrap;
+        }
+
+        .consultation-select select {
+            font-size: 19px;
+            padding: 10px;
+            width: 80%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+
+
     </style>
 </head>
 <body>
 <header th:replace="fragments/commons::header"></header>
 <div class="main-content">
     <h1>Book an appointment</h1>
+    <div class="consultation-select">
+        <label for="consultation-dropdown">Make appointment for</label>
+        <select id="consultation-dropdown" name="consultationId">
+            <option value="" selected>Select...</option>
+            <th:block th:each="consultation : ${consultations}">
+                <option th:value="${consultation.id}"
+                        th:text="${consultation.name + ' (' + consultation.duration + ' minutes - ' + consultation.price + 'lv.)'}"
+                        th:data-duration="${consultation.duration}">
+                </option>
+            </th:block>
+        </select>
+    </div>
     <div class="calendar-wrapper">
         <div class="calendar-header">
             <button class="prev-button" onclick="scrollCalendar('left')">&#8249;</button>
@@ -147,9 +204,10 @@
 </div>
 <footer th:replace="fragments/commons::footer"></footer>
 <script>
-    // JavaScript to handle calendar and appointment slot logic
     document.addEventListener('DOMContentLoaded', function() {
         const calendarContainer = document.getElementById('calendar');
+        const calendarWrapper = document.querySelector('.calendar-wrapper');
+        const consultationDropdown = document.getElementById('consultation-dropdown');
         const today = new Date();
         const daysToShow = 90;
 
@@ -167,9 +225,7 @@
 
             const dateBox = document.createElement('div');
             dateBox.className = 'date-box';
-            dateBox.innerHTML = `
-                <div class="day-number">${date.getDate()}</div>
-            `;
+            dateBox.innerHTML = `<div class="day-number">${date.getDate()}</div>`;
             dateBox.addEventListener('click', () => {
                 selectDate(dateBox, date);
             });
@@ -185,7 +241,18 @@
             calendarContainer.appendChild(dateWrapper);
         }
 
-        selectDate(calendarContainer.querySelector('.date-box'), today);
+        // Initial check to apply blur if no consultation is selected
+        checkConsultationSelection();
+
+        consultationDropdown.addEventListener('change', function() {
+            checkConsultationSelection();
+            // Fetch available slots if a date is already selected
+            const selectedDate = document.querySelector('.date-box.selected');
+            if (selectedDate) {
+                const selectedDateValue = new Date(selectedDate.querySelector('.day-number').textContent);
+                fetchAvailableSlots(selectedDateValue.toISOString().split('T')[0]);
+            }
+        });
     });
 
     function selectDate(element, date) {
@@ -194,12 +261,21 @@
 
         element.classList.add('selected');
 
-        // Fetch available slots for the selected date
+        // Fetch available slots for the selected date and selected consultation
         fetchAvailableSlots(date.toISOString().split('T')[0]);
     }
 
     function fetchAvailableSlots(date) {
-        fetch(`/appointments?date=${date}`)
+        const consultationDropdown = document.getElementById('consultation-dropdown');
+        const selectedConsultation = consultationDropdown.options[consultationDropdown.selectedIndex];
+        const duration = selectedConsultation.getAttribute('data-duration');
+
+        if (!duration) {
+            console.error('Consultation duration not found');
+            return;
+        }
+
+        fetch(`/appointments?date=${date}&duration=${duration}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Failed to fetch available slots');
@@ -212,18 +288,36 @@
 
     function renderSlots(slots) {
         const slotsContainer = document.getElementById('slots-container');
-        slotsContainer.innerHTML = '';  // Clear previous slots
+        slotsContainer.innerHTML = '';
 
-        slots.forEach(slot => {
+        // Time format for displaying slot times
+        const timeFormat = { hour: '2-digit', minute: '2-digit', hour12: false };
+
+        // Generate all possible slots
+        const allSlots = [];
+        let currentTime = new Date();
+        currentTime.setHours(10, 0, 0, 0);
+
+        while (currentTime.getHours() <= 20) {
+            allSlots.push(currentTime.toLocaleTimeString('en-US', timeFormat));
+            currentTime.setMinutes(currentTime.getMinutes() + 30);
+        }
+
+        // Convert slots to a Set for quick lookup
+        const availableSlotsSet = new Set(slots.map(slot => slot.slice(0, 5))); // Strip seconds for comparison
+
+        allSlots.forEach(slot => {
             const slotElement = document.createElement('button');
-            slotElement.textContent = slot.time;
+            slotElement.textContent = slot;
 
-            if (slot.taken) {
-                slotElement.classList.add('taken');
-                slotElement.disabled = true;
-            } else {
+            if (availableSlotsSet.has(slot)) {
                 slotElement.classList.add('available');
-                slotElement.addEventListener('click', () => bookAppointment(slot.time));
+                slotElement.classList.remove('taken');
+                slotElement.addEventListener('click', () => bookAppointment(slot));
+            } else {
+                slotElement.classList.add('taken');
+                slotElement.classList.remove('available');
+                slotElement.disabled = true;
             }
 
             slotsContainer.appendChild(slotElement);
@@ -246,6 +340,18 @@
     function bookAppointment(time) {
         alert(`Booking appointment for ${time}`);
     }
+
+    function checkConsultationSelection() {
+        const consultationDropdown = document.getElementById('consultation-dropdown');
+        const calendarWrapper = document.querySelector('.calendar-wrapper');
+
+        if (consultationDropdown.value) {
+            calendarWrapper.classList.remove('blur');
+        } else {
+            calendarWrapper.classList.add('blur');
+        }
+    }
+
 </script>
 </body>
 </html>
