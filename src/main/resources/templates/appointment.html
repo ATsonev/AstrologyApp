@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Book an Appointment</title>
@@ -144,6 +144,11 @@
             background-color: #8db4c4;
         }
 
+        .slots button.selected-slot {
+            background-color: #8db4c4;
+            color: white;
+        }
+
         .slots button.taken {
             background-color: #ccc;
             color: #666;
@@ -183,6 +188,8 @@
 <header th:replace="fragments/commons::header"></header>
 <div class="main-content">
     <h1>Book an appointment</h1>
+    <input type="hidden" id="csrfToken" th:value="${_csrf.token}">
+    <input type="hidden" id="isAuthenticated" th:value="${#authentication.authenticated}"/>
     <div class="consultation-select">
         <label for="consultation-dropdown">Make appointment for</label>
         <select id="consultation-dropdown" name="consultationId" style="width: 170%">
@@ -221,23 +228,45 @@
         </div>
 
         <div id="appointment-details">
-            <textarea id="comment-box" placeholder="Add a comment..." rows="4" cols="50" style="resize: none; padding: 10px;"></textarea>
+            <textarea id="comment-box" placeholder="Add a comment..." rows="4" cols="50" style="resize: none; padding: 10px; font-size: 18px"></textarea>
             <br><br>
-            <button id="save-appointment" style="padding: 10px 20px; font-size: 18px; background-color: #212f3c; color: white; border: none; border-radius: 5px; cursor: pointer;">Save Appointment</button>
+            <button id="save-appointment" style="padding: 10px 20px; font-size: 18px; background-color: #212f3c; color: white; border: none; border-radius: 5px; cursor: pointer;"
+            >Save Appointment</button>
+        </div>
+
+        <div id="login-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2>Login to Your Account</h2>
+                <form id="login-form"
+                      th:action="@{/login}"
+                      th:method="post">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                    <br><br>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                    <br><br>
+                    <button type="submit">Login</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 <footer th:replace="fragments/commons::footer"></footer>
 <script>
+    let today;
+    const csrfToken = document.getElementById('csrfToken').value;
+
     document.addEventListener('DOMContentLoaded', function() {
+        today = new Date();
         const calendarContainer = document.getElementById('calendar');
         const calendarWrapper = document.querySelector('.calendar-wrapper');
         const consultationDropdown = document.getElementById('consultation-dropdown');
         const locationDropdown = document.getElementById('location-dropdown');
-        const today = new Date();
         const daysToShow = 90;
 
-        // Generate the calendar dates
         for (let i = 0; i < daysToShow; i++) {
             const date = new Date();
             date.setDate(today.getDate() + i);
@@ -351,8 +380,33 @@
         }
     }
 
+    function checkIfLoggedIn() {
+        return document.getElementById('isAuthenticated').value === 'false';
+    }
+
     function bookAppointment(time) {
-        alert(`Booking appointment for ${time}`);
+        const isAuthenticated = checkIfLoggedIn();
+        console.log(isAuthenticated);
+        if (!isAuthenticated) {
+            openModal();
+            return;
+        }
+
+        const appointmentDetails = document.getElementById('appointment-details');
+        appointmentDetails.style.display = 'block';
+
+        document.getElementById('save-appointment').setAttribute('data-time', time);
+
+        const slotButtons = document.querySelectorAll('#slots-container button');
+
+        slotButtons.forEach(button => {
+            button.classList.remove('selected-slot');
+        });
+
+        const selectedButton = Array.from(slotButtons).find(button => button.textContent === time);
+        if (selectedButton) {
+            selectedButton.classList.add('selected-slot');
+        }
     }
 
     function checkConsultationSelection() {
@@ -374,6 +428,94 @@
             selectedDate.classList.remove('selected');
         }
     }
+
+    document.getElementById('save-appointment').addEventListener('click', function() {
+        const selectedTime = this.getAttribute('data-time');
+        const comment = document.getElementById('comment-box').value;
+        const selectedConsultation = document.getElementById('consultation-dropdown').value;
+        const selectedLocation = document.getElementById('location-dropdown').value;
+        const selectedDateElement = document.querySelector('.date-box.selected');
+        const selectedDate = selectedDateElement ? selectedDateElement.querySelector('.day-number').textContent : null;
+
+        if (selectedTime && selectedConsultation && selectedLocation && selectedDate) {
+            const appointmentData = {
+                consultationId: selectedConsultation,
+                location: selectedLocation,
+                date: `${today.getFullYear()}-${today.getMonth() + 1}-${selectedDate}`,
+                time: selectedTime,
+                comment: comment
+            };
+
+            fetch('/save-appointment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': csrfToken
+                },
+                body: JSON.stringify(appointmentData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Appointment saved successfully!');
+                        // Optionally, reset form and hide details
+                        document.getElementById('comment-box').value = '';
+                        document.getElementById('consultation-dropdown').value = '';
+                        document.getElementById('location-dropdown').value = '';
+                        document.querySelector('.date-box.selected')?.classList.remove('selected');
+                        document.getElementById('slots-container').innerHTML = '';
+                        document.getElementById('appointment-details').style.display = 'none';
+                    } else {
+                        alert('Failed to save appointment. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saving appointment:', error);
+                    alert('An error occurred while saving the appointment.');
+                });
+        } else {
+            alert('Please ensure all selections are made.');
+        }
+    });
+
+    function openModal() {
+        document.getElementById('login-modal').style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('login-modal').style.display = 'none';
+    }
+
+   /* document.getElementById('login-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        console.log(username);
+        console.log(password);
+
+        fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken
+            },
+            body: JSON.stringify({ username, password })
+        })
+            .then(response => {
+                if (response.ok) {
+                    closeModal();
+                    alert('Login successful!');
+                    // Optionally, reload or update the page to reflect the login status
+                } else {
+                    alert('Login failed. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error logging in:', error);
+                alert('An error occurred during login.');
+            });
+    });*/
 
 </script>
 </body>
