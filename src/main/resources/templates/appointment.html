@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
     <style>
-        /* Styling for the calendar and appointment slots */
         .calendar-wrapper {
             display: flex;
             flex-direction: column;
@@ -18,7 +17,7 @@
 
         .calendar-wrapper.blur {
             filter: blur(5px);
-            pointer-events: none; /* Prevents any interactions */
+            pointer-events: none;
             position: relative;
         }
 
@@ -29,8 +28,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.7); /* Optional: Adds a semi-transparent overlay */
-            z-index: 1; /* Ensures the overlay is on top */
+            background: rgba(255, 255, 255, 0.7);
+            z-index: 1;
         }
 
         .calendar-header {
@@ -69,7 +68,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 80px; /* Increase width to accommodate larger dates */
+            width: 80px;
             text-align: center;
         }
 
@@ -77,8 +76,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 80px; /* Increase width to match the new size */
-            height: 80px; /* Increase height to match the new size */
+            width: 80px;
+            height: 80px;
             background-color: #f0f0f0;
             border-radius: 5px;
             cursor: pointer;
@@ -88,7 +87,7 @@
         }
 
         .date-box .day-number {
-            font-size: 24px; /* Increase font size for larger date numbers */
+            font-size: 24px;
             font-weight: bold;
             color: #333;
         }
@@ -99,27 +98,28 @@
         }
 
         .date-box.selected .day-number {
-            color: white; /* Ensure day number text color changes when selected */
+            color: white;
         }
 
         .month {
-            font-size: 14px; /* Adjust font size if needed */
+            font-size: 14px;
             font-weight: bold;
             color: #555;
-            margin-bottom: 5px; /* Space between month and date box */
+            margin-bottom: 5px;
         }
 
         .weekday {
-            font-size: 14px; /* Adjust font size if needed */
+            font-size: 14px;
             font-weight: bold;
             color: #777;
-            margin-top: 5px; /* Space between date box and day of the week */
+            margin-top: 5px;
         }
 
         .slots {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
+            max-width: 85%;
             justify-content: center;
         }
 
@@ -127,6 +127,9 @@
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
+            width: 80px;
+            height: 50px;
+            font-size: 18px;
             background-color: #212f3c;
             color: white;
             cursor: pointer;
@@ -149,6 +152,7 @@
         .consultation-select {
             display: flex;
             margin-bottom: 20px;
+            max-width: 80%;
             align-items: center;
             margin-top: 2%;
         }
@@ -167,7 +171,11 @@
             border: 1px solid #ccc;
         }
 
-
+        #appointment-details {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
 
     </style>
 </head>
@@ -177,7 +185,7 @@
     <h1>Book an appointment</h1>
     <div class="consultation-select">
         <label for="consultation-dropdown">Make appointment for</label>
-        <select id="consultation-dropdown" name="consultationId">
+        <select id="consultation-dropdown" name="consultationId" style="width: 170%">
             <option value="" selected>Select...</option>
             <th:block th:each="consultation : ${consultations}">
                 <option th:value="${consultation.id}"
@@ -186,7 +194,19 @@
                 </option>
             </th:block>
         </select>
+
+        <label for="location-dropdown" style="margin-left: 40px">Choose location</label>
+        <select id="location-dropdown" name="locationId">
+            <option value="" selected>Select...</option>
+            <th:block th:each="location : ${locations}">
+                <option th:value="${location.name()}"
+                        th:text="${location.name()}">
+                </option>
+            </th:block>
+        </select>
+
     </div>
+
     <div class="calendar-wrapper">
         <div class="calendar-header">
             <button class="prev-button" onclick="scrollCalendar('left')">&#8249;</button>
@@ -198,7 +218,12 @@
             <button class="next-button" onclick="scrollCalendar('right')">&#8250;</button>
         </div>
         <div id="slots-container" class="slots">
+        </div>
 
+        <div id="appointment-details">
+            <textarea id="comment-box" placeholder="Add a comment..." rows="4" cols="50" style="resize: none; padding: 10px;"></textarea>
+            <br><br>
+            <button id="save-appointment" style="padding: 10px 20px; font-size: 18px; background-color: #212f3c; color: white; border: none; border-radius: 5px; cursor: pointer;">Save Appointment</button>
         </div>
     </div>
 </div>
@@ -208,10 +233,11 @@
         const calendarContainer = document.getElementById('calendar');
         const calendarWrapper = document.querySelector('.calendar-wrapper');
         const consultationDropdown = document.getElementById('consultation-dropdown');
+        const locationDropdown = document.getElementById('location-dropdown');
         const today = new Date();
         const daysToShow = 90;
 
-        // Generate calendar dates
+        // Generate the calendar dates
         for (let i = 0; i < daysToShow; i++) {
             const date = new Date();
             date.setDate(today.getDate() + i);
@@ -241,18 +267,10 @@
             calendarContainer.appendChild(dateWrapper);
         }
 
-        // Initial check to apply blur if no consultation is selected
         checkConsultationSelection();
 
-        consultationDropdown.addEventListener('change', function() {
-            checkConsultationSelection();
-            // Fetch available slots if a date is already selected
-            const selectedDate = document.querySelector('.date-box.selected');
-            if (selectedDate) {
-                const selectedDateValue = new Date(selectedDate.querySelector('.day-number').textContent);
-                fetchAvailableSlots(selectedDateValue.toISOString().split('T')[0]);
-            }
-        });
+        consultationDropdown.addEventListener('change', checkConsultationSelection);
+        locationDropdown.addEventListener('change', checkConsultationSelection);
     });
 
     function selectDate(element, date) {
@@ -261,7 +279,6 @@
 
         element.classList.add('selected');
 
-        // Fetch available slots for the selected date and selected consultation
         fetchAvailableSlots(date.toISOString().split('T')[0]);
     }
 
@@ -290,10 +307,8 @@
         const slotsContainer = document.getElementById('slots-container');
         slotsContainer.innerHTML = '';
 
-        // Time format for displaying slot times
         const timeFormat = { hour: '2-digit', minute: '2-digit', hour12: false };
 
-        // Generate all possible slots
         const allSlots = [];
         let currentTime = new Date();
         currentTime.setHours(10, 0, 0, 0);
@@ -303,8 +318,7 @@
             currentTime.setMinutes(currentTime.getMinutes() + 30);
         }
 
-        // Convert slots to a Set for quick lookup
-        const availableSlotsSet = new Set(slots.map(slot => slot.slice(0, 5))); // Strip seconds for comparison
+        const availableSlotsSet = new Set(slots.map(slot => slot.slice(0, 5)));
 
         allSlots.forEach(slot => {
             const slotElement = document.createElement('button');
@@ -343,12 +357,21 @@
 
     function checkConsultationSelection() {
         const consultationDropdown = document.getElementById('consultation-dropdown');
+        const locationDropdown = document.getElementById('location-dropdown');
         const calendarWrapper = document.querySelector('.calendar-wrapper');
+        const slotsContainer = document.getElementById('slots-container');
 
-        if (consultationDropdown.value) {
+        if (consultationDropdown.value && locationDropdown.value) {
             calendarWrapper.classList.remove('blur');
         } else {
             calendarWrapper.classList.add('blur');
+        }
+
+        slotsContainer.innerHTML = '';
+
+        const selectedDate = document.querySelector('.date-box.selected');
+        if (selectedDate) {
+            selectedDate.classList.remove('selected');
         }
     }
 

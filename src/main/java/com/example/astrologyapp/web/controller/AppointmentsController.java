@@ -1,5 +1,6 @@
 package com.example.astrologyapp.web.controller;
 
+import com.example.astrologyapp.model.enums.Location;
 import com.example.astrologyapp.service.AppointmentService;
 import com.example.astrologyapp.service.ConsultationService;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ public class AppointmentsController {
     @GetMapping("/appointment")
     public String appointments(Model model){
         model.addAttribute("consultations", consultationService.getAllConsultations());
+        model.addAttribute("locations", Location.values());
         return "appointment";
     }
 

@@ -75,7 +75,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public List<LocalDateTime> getSlots(LocalDate date) {
         List<LocalDateTime> slots = new ArrayList<>();
         LocalTime startTime = LocalTime.of(10, 0);
-        LocalTime endTime = LocalTime.of(20, 30);
+        LocalTime endTime = LocalTime.of(21, 0);
 
         LocalDateTime current = date.atTime(startTime);
 
