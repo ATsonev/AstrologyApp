@@ -185,7 +185,7 @@
     </style>
 </head>
 <body>
-<header th:replace="fragments/commons::header"></header>
+<header th:replace="fragments/header::header"></header>
 <div class="main-content">
     <h1>Book an appointment</h1>
     <input type="hidden" id="csrfToken" th:value="${_csrf.token}">
@@ -211,16 +211,12 @@
                 </option>
             </th:block>
         </select>
-
     </div>
-
     <div class="calendar-wrapper">
         <div class="calendar-header">
             <button class="prev-button" onclick="scrollCalendar('left')">&#8249;</button>
             <div class="calendar-dates">
-                <div id="calendar" class="dates-container">
-
-                </div>
+                <div id="calendar" class="dates-container"></div>
             </div>
             <button class="next-button" onclick="scrollCalendar('right')">&#8250;</button>
         </div>
@@ -237,7 +233,8 @@
         <div id="login-modal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeModal()">&times;</span>
-                <h2>Login to Your Account</h2>
+                <h2>Login into existing account</h2>
+                <div id="login-error-message" style="color: red; margin-bottom: 15px;"></div>
                 <form id="login-form"
                       th:action="@{/login}"
                       th:method="post">
@@ -247,14 +244,17 @@
                     <br><br>
                     <label for="password">Password:</label>
                     <input type="password" id="password" name="password" required>
-                    <br><br>
+                    <!--<br><br>-->
+                    <p style="text-align: center;">
+                        <a th:href="@{/register}">Register</a>
+                    </p>
                     <button type="submit">Login</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
-<footer th:replace="fragments/commons::footer"></footer>
+<footer th:replace="fragments/footer::footer"></footer>
 <script>
     let today;
     const csrfToken = document.getElementById('csrfToken').value;
@@ -266,6 +266,7 @@
         const consultationDropdown = document.getElementById('consultation-dropdown');
         const locationDropdown = document.getElementById('location-dropdown');
         const daysToShow = 90;
+
 
         for (let i = 0; i < daysToShow; i++) {
             const date = new Date();
@@ -506,19 +507,19 @@
                 if (response.ok) {
                     return response.text();
                 } else {
-                    throw new Error('Login failed. Please try again.');
+                    return response.json().then(data => {
+                        throw new Error(data.message || 'Login failed. Please try again.');
+                    });
                 }
             })
-            .then(data => {
-                closeModal();
-                alert('Login successful!');
-
-                document.getElementById('isAuthenticated').value = 'true';
-
+            .then(() => {
+                closeModal(); // Close modal on successful login
+                window.location.reload(); // Reload the page to reflect authenticated state
             })
             .catch(error => {
                 console.error('Error logging in:', error);
-                alert('An error occurred during login.');
+                document.getElementById('login-error-message').textContent = error.message; // Show error message
+                // Ensure the modal stays open on error
             });
     });
 </script>

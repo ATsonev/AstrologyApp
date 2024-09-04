@@ -5,30 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <title>ZenPlanner</title>
+    <title>Title</title>
 </head>
 <body>
-<header th:fragment="header">
-    <div class="header-content">
-        <button class="logo-button" onclick="window.location.href='/'"></button>
-        <div class="header-buttons">
-            <a href="/">Home</a>
-            <a href="/appointment">Book an appointment</a>
-            <a sec:authorize="isAuthenticated()" href="/my-appointments">My appointments</a>
-            <a href="/contacts">Contacts</a>
-            <a sec:authorize="isAnonymous()" href="/login">Login</a>
-            <a sec:authorize="isAnonymous()" href="/register">Register</a>
-            <form id="logout-form" th:action="@{/logout}" method="post" style="display:none;"></form>
-            <div sec:authorize="isAuthenticated()" class="dropdown">
-                <a href="#" class="dropdown-toggle">Profile ▼</a>
-                <div class="dropdown-content">
-                    <a href="/edit-profile">Edit Profile</a>
-                    <a href="#" onclick="document.getElementById('logout-form').submit(); return false;">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
 
 <footer class="footer" th:fragment="footer">
     <div class="footer-content-wrapper">
@@ -52,5 +31,6 @@
         </div>
     </div>
 </footer>
+
 </body>
 </html>

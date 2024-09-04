@@ -91,7 +91,7 @@
     </style>
 </head>
 <body>
-<header th:replace="fragments/commons::header"></header>
+<header th:replace="fragments/header::header"></header>
 <div class="registration-container">
     <img src="/images/register.png" alt="Register">
     <h2>Register New User</h2>
@@ -169,7 +169,7 @@
         <button type="submit" class="register-button">Register</button>
     </form>
 </div>
-<footer th:replace="fragments/commons::footer"></footer>
+<footer th:replace="fragments/footer :: footer"></footer>
 
 <script>
     flatpickr("#dateAndHourOfBirth", {
