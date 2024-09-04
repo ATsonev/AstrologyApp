@@ -8,13 +8,13 @@
     <title>ZenPlanner</title>
 </head>
 <body>
-<header>
+<header th:fragment="header">
     <div class="header-content">
         <button class="logo-button" onclick="window.location.href='/'"></button>
         <div class="header-buttons">
             <a href="/">Home</a>
-            <a sec:authorize="isAuthenticated()" href="/my-appointments">My appointments</a>
             <a href="/appointment">Book an appointment</a>
+            <a sec:authorize="isAuthenticated()" href="/my-appointments">My appointments</a>
             <a href="/contacts">Contacts</a>
             <a sec:authorize="isAnonymous()" href="/login">Login</a>
             <a sec:authorize="isAnonymous()" href="/register">Register</a>
@@ -30,7 +30,7 @@
     </div>
 </header>
 
-<footer class="footer">
+<footer class="footer" th:fragment="footer">
     <div class="footer-content-wrapper">
         <div class="footer-logo">
             <img src="/images/logo.png" alt="Logo" class="logo-image">

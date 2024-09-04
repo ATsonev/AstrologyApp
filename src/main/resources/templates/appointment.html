@@ -189,7 +189,7 @@
 <div class="main-content">
     <h1>Book an appointment</h1>
     <input type="hidden" id="csrfToken" th:value="${_csrf.token}">
-    <input type="hidden" id="isAuthenticated" th:value="${#authentication.authenticated}"/>
+    <input type="hidden" id="isAuthenticated" th:value="${#authentication.name}"/>
     <div class="consultation-select">
         <label for="consultation-dropdown">Make appointment for</label>
         <select id="consultation-dropdown" name="consultationId" style="width: 170%">
@@ -381,7 +381,9 @@
     }
 
     function checkIfLoggedIn() {
-        return document.getElementById('isAuthenticated').value === 'false';
+        const isAuthenticated = document.getElementById('isAuthenticated').value;
+        console.log(isAuthenticated);
+        return isAuthenticated !== 'anonymousUser';
     }
 
     function bookAppointment(time) {
@@ -486,37 +488,39 @@
         document.getElementById('login-modal').style.display = 'none';
     }
 
-   /* document.getElementById('login-form').addEventListener('submit', function(event) {
+    document.getElementById('login-form').addEventListener('submit', function(event) {
         event.preventDefault();
 
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
-        console.log(username);
-        console.log(password);
 
         fetch('/login', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded',
                 'X-CSRF-Token': csrfToken
             },
-            body: JSON.stringify({ username, password })
+            body: new URLSearchParams({ username, password })
         })
             .then(response => {
                 if (response.ok) {
-                    closeModal();
-                    alert('Login successful!');
-                    // Optionally, reload or update the page to reflect the login status
+                    return response.text();
                 } else {
-                    alert('Login failed. Please try again.');
+                    throw new Error('Login failed. Please try again.');
                 }
+            })
+            .then(data => {
+                closeModal();
+                alert('Login successful!');
+
+                document.getElementById('isAuthenticated').value = 'true';
+
             })
             .catch(error => {
                 console.error('Error logging in:', error);
                 alert('An error occurred during login.');
             });
-    });*/
-
+    });
 </script>
 </body>
 </html>
