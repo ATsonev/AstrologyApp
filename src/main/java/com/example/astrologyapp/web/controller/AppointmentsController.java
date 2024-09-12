@@ -48,7 +48,7 @@ public class AppointmentsController {
 
     @PostMapping("/save-appointment")
     public ResponseEntity<?> saveAppointment(@RequestBody AppointmentDto appointmentDto) {
-
+        appointmentService.saveAppointment(appointmentDto);
         return ResponseEntity.ok().body(Map.of("success", true));
     }
 

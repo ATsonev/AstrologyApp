@@ -461,13 +461,7 @@
                 .then(data => {
                     if (data.success) {
                         alert('Appointment saved successfully!');
-                        // Optionally, reset form and hide details
-                        document.getElementById('comment-box').value = '';
-                        document.getElementById('consultation-dropdown').value = '';
-                        document.getElementById('location-dropdown').value = '';
-                        document.querySelector('.date-box.selected')?.classList.remove('selected');
-                        document.getElementById('slots-container').innerHTML = '';
-                        document.getElementById('appointment-details').style.display = 'none';
+                        window.location.reload();
                     } else {
                         alert('Failed to save appointment. Please try again.');
                     }
@@ -513,13 +507,12 @@
                 }
             })
             .then(() => {
-                closeModal(); // Close modal on successful login
-                window.location.reload(); // Reload the page to reflect authenticated state
+                closeModal();
+                window.location.reload();
             })
             .catch(error => {
                 console.error('Error logging in:', error);
-                document.getElementById('login-error-message').textContent = error.message; // Show error message
-                // Ensure the modal stays open on error
+                document.getElementById('login-error-message').textContent = error.message;
             });
     });
 </script>

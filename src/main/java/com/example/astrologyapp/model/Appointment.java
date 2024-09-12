@@ -16,7 +16,10 @@ public class Appointment extends BaseEntity {
     private LocalDateTime dateTime;
     private String comment;
     @Column
+    @Enumerated(EnumType.STRING)
     private Location location;
+    @Column
+    @Enumerated(EnumType.STRING)
     private ConsultationStatus status;
     @ManyToOne
     @JoinColumn(name = "consultation_id", referencedColumnName = "id")
