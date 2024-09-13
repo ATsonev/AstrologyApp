@@ -24,6 +24,8 @@ public class Appointment extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "consultation_id", referencedColumnName = "id")
     private Consultation consultation;
+    @Column(name = "date_and_time_made")
+    private LocalDateTime dateTimeMade;
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
@@ -74,5 +76,13 @@ public class Appointment extends BaseEntity {
 
     public void setStatus(ConsultationStatus status) {
         this.status = status;
+    }
+
+    public LocalDateTime getDateTimeMade() {
+        return dateTimeMade;
+    }
+
+    public void setDateTimeMade(LocalDateTime dateTimeMade) {
+        this.dateTimeMade = dateTimeMade;
     }
 }

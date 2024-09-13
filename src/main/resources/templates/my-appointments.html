@@ -67,9 +67,9 @@
             <tbody>
             <tr th:each="appointment : ${appointments}">
                 <td th:text="${appointment.getConsultation()}"></td>
-                <td th:text="${appointment.getDate()}"></td>
+                <td th:text="${appointment.getDateTime()}"></td>
                 <td th:text="${appointment.getLocation()}"></td>
-                <td> <!--th:text="${appointment.getAppointmentMadeOn()}"-->Made on</td>
+                <td th:text="${appointment.getDateTimeMade()}"></td>
                 <td th:text="${appointment.getComment()}"></td>
                 <td th:text="${appointment.getStatus()}"></td>
             </tr>

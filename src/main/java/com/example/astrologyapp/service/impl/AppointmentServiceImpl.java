@@ -86,6 +86,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         LocalTime localTime = LocalTime.parse(appointmentDto.getTime());
         LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
         appointment.setDateTime(localDateTime);
+        appointment.setDateTimeMade(LocalDateTime.now());
 
         User user = getCurrentUser();
         appointment.setUser(user);
@@ -106,6 +107,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
             appointmentDto.setDateTime(a.getDateTime().format(formatter));
+            appointmentDto.setDateTimeMade(a.getDateTimeMade().format(formatter));
             return appointmentDto;
         }).toList();
     }

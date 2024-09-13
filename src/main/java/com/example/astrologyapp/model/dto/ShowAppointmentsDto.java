@@ -8,6 +8,7 @@ public class ShowAppointmentsDto {
     private String consultation;
     private String location;
     private String dateTime;
+    private String dateTimeMade;
     private String comment;
     private String status;
 
@@ -49,5 +50,13 @@ public class ShowAppointmentsDto {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getDateTimeMade() {
+        return dateTimeMade;
+    }
+
+    public void setDateTimeMade(String dateTimeMade) {
+        this.dateTimeMade = dateTimeMade;
     }
 }
