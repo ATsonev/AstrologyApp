@@ -1,10 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
     <title>Title</title>
+    <style>
+        .styled-table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            font-size: 18px;
+            text-align: left;
+            background-color: #fffff8;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        td{
+            font-size: 18px;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        thead {
+            background-color: #212f3c;
+            font-size: 22px;
+            color: white;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        @media (max-width: 768px) {
+            .styled-table {
+                width: 95%;
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .styled-table {
+                font-size: 14px;
+            }
+        }
+
+    </style>
 </head>
 <body>
-
+    <header th:replace="fragments/header::header"></header>
+    <main class="main-content">
+        <h1>My Appointments</h1>
+        <table class="styled-table">
+            <thead>
+            <tr>
+                <th>Consultation</th>
+                <th>Date and Hour</th>
+                <th>Location</th>
+                <th>Appointment Made On</th>
+                <th>Comment</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="appointment : ${appointments}">
+                <td th:text="${appointment.getConsultation()}"></td>
+                <td th:text="${appointment.getDate()}"></td>
+                <td th:text="${appointment.getLocation()}"></td>
+                <td> <!--th:text="${appointment.getAppointmentMadeOn()}"-->Made on</td>
+                <td th:text="${appointment.getComment()}"></td>
+                <td th:text="${appointment.getStatus()}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </main>
+    <footer th:replace="fragments/footer::footer"></footer>
 </body>
 </html>

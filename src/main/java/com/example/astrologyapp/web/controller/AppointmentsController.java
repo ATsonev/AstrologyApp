@@ -1,6 +1,7 @@
 package com.example.astrologyapp.web.controller;
 
 import com.example.astrologyapp.model.dto.AppointmentDto;
+import com.example.astrologyapp.model.dto.ShowAppointmentsDto;
 import com.example.astrologyapp.model.enums.Location;
 import com.example.astrologyapp.service.AppointmentService;
 import com.example.astrologyapp.service.ConsultationService;
@@ -50,6 +51,13 @@ public class AppointmentsController {
     public ResponseEntity<?> saveAppointment(@RequestBody AppointmentDto appointmentDto) {
         appointmentService.saveAppointment(appointmentDto);
         return ResponseEntity.ok().body(Map.of("success", true));
+    }
+
+    @GetMapping("/my-appointments")
+    public String myAppointments(Model model){
+        List<ShowAppointmentsDto> appointmentForUser = appointmentService.getAppointmentForUser();
+        model.addAttribute("appointments", appointmentForUser);
+        return "my-appointments";
     }
 
 }

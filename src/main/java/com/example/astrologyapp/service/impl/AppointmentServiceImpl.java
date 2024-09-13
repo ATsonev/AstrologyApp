@@ -4,6 +4,8 @@ import com.example.astrologyapp.model.Appointment;
 import com.example.astrologyapp.model.Consultation;
 import com.example.astrologyapp.model.User;
 import com.example.astrologyapp.model.dto.AppointmentDto;
+import com.example.astrologyapp.model.dto.ConsultationDto;
+import com.example.astrologyapp.model.dto.ShowAppointmentsDto;
 import com.example.astrologyapp.model.enums.ConsultationStatus;
 import com.example.astrologyapp.model.enums.Location;
 import com.example.astrologyapp.repository.AppointmentRepository;
@@ -23,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -84,6 +87,30 @@ public class AppointmentServiceImpl implements AppointmentService {
         LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
         appointment.setDateTime(localDateTime);
 
+        User user = getCurrentUser();
+        appointment.setUser(user);
+
+        appointmentRepository.save(appointment);
+    }
+
+    @Override
+    public List<ShowAppointmentsDto> getAppointmentForUser() {
+        User currentUser = getCurrentUser();
+        List<Appointment> allByUser = appointmentRepository.findAllByUser(currentUser);
+
+        return allByUser.stream().map(a -> {
+            Consultation consultation = consultationRepository.findById(a.getId()).get();
+            ShowAppointmentsDto appointmentDto = modelMapper.map(a, ShowAppointmentsDto.class);
+            appointmentDto.setConsultation(consultation.getName() + " " + consultation.getDuration() +
+                            " (" +consultation.getPrice() + "lv.)");
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+            appointmentDto.setDateTime(a.getDateTime().format(formatter));
+            return appointmentDto;
+        }).toList();
+    }
+
+    private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = null;
 
@@ -97,9 +124,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
 
         User user = userRepository.findByEmail(email).orElseThrow(NoSuchElementException::new);
-        appointment.setUser(user);
-
-        appointmentRepository.save(appointment);
+        return user;
     }
 
     public List<LocalTime> getAvailableSlots(List<LocalTime> slots, int duration){
