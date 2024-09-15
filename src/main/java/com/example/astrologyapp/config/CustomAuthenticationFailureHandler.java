@@ -22,10 +22,8 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
 
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // Set 401 status code for failed authentication
-        response.setContentType("application/json");
-
         String errorMessage;
+
         if (exception.getMessage().equalsIgnoreCase("There is no user with this email or phone number in our system")) {
             errorMessage = "There is no user with this email or phone number in our system";
         } else if (exception.getMessage().equalsIgnoreCase("Bad credentials")) {
@@ -34,12 +32,7 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
             errorMessage = "Authentication failed - " + exception.getMessage();
         }
 
-        Map<String, String> responseBody = new HashMap<>();
-        responseBody.put("message", errorMessage);
-
-        ObjectMapper mapper = new ObjectMapper();
-        PrintWriter writer = response.getWriter();
-        writer.write(mapper.writeValueAsString(responseBody));
-        writer.flush();
+        // Redirect to login page with error message as a URL parameter
+        response.sendRedirect("/login?error=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8));
     }
 }

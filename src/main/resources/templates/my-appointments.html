@@ -13,15 +13,21 @@
             text-align: left;
             background-color: #fffff8;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-        }
-
-        td{
-            font-size: 18px;
+            /* Ensure the table layout is fixed to respect column widths */
+            table-layout: fixed;
         }
 
         th, td {
             padding: 12px;
             border-bottom: 1px solid #ddd;
+        }
+
+        /* Style for the comment column */
+        .comment-column {
+            width: 150px; /* Set fixed width */
+            overflow-wrap: break-word; /* Ensure long words break properly */
+            word-wrap: break-word; /* Fallback for older browsers */
+            white-space: normal; /* Ensure text wraps to next line */
         }
 
         thead {
@@ -46,36 +52,35 @@
                 font-size: 14px;
             }
         }
-
     </style>
 </head>
 <body>
-    <header th:replace="fragments/header::header"></header>
-    <main class="main-content">
-        <h1>My Appointments</h1>
-        <table class="styled-table">
-            <thead>
-            <tr>
-                <th>Consultation</th>
-                <th>Date and Hour</th>
-                <th>Location</th>
-                <th>Appointment Made On</th>
-                <th>Comment</th>
-                <th>Status</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="appointment : ${appointments}">
-                <td th:text="${appointment.getConsultation()}"></td>
-                <td th:text="${appointment.getDateTime()}"></td>
-                <td th:text="${appointment.getLocation()}"></td>
-                <td th:text="${appointment.getDateTimeMade()}"></td>
-                <td th:text="${appointment.getComment()}"></td>
-                <td th:text="${appointment.getStatus()}"></td>
-            </tr>
-            </tbody>
-        </table>
-    </main>
-    <footer th:replace="fragments/footer::footer"></footer>
+<header th:replace="fragments/header::header"></header>
+<main class="main-content">
+    <h1>My Appointments</h1>
+    <table class="styled-table">
+        <thead>
+        <tr>
+            <th>Consultation</th>
+            <th>Date and Hour</th>
+            <th>Location</th>
+            <th>Appointment Made On</th>
+            <th class="comment-column">Comment</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="appointment : ${appointments}">
+            <td th:text="${appointment.getConsultation()}"></td>
+            <td th:text="${appointment.getDateTime()}"></td>
+            <td th:text="${appointment.getLocation()}"></td>
+            <td th:text="${appointment.getDateTimeMade()}"></td>
+            <td th:text="${appointment.getComment()}" class="comment-column"></td>
+            <td th:text="${appointment.getStatus()}"></td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+<footer th:replace="fragments/footer::footer"></footer>
 </body>
 </html>

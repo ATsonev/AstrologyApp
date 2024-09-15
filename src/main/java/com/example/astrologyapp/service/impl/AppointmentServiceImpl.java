@@ -102,8 +102,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         return allByUser.stream().map(a -> {
             Consultation consultation = consultationRepository.findById(a.getId()).get();
             ShowAppointmentsDto appointmentDto = modelMapper.map(a, ShowAppointmentsDto.class);
-            appointmentDto.setConsultation(consultation.getName() + " " + consultation.getDuration() +
-                            " (" +consultation.getPrice() + "lv.)");
+            appointmentDto.setConsultation(consultation.getName() + " - " + consultation.getDuration() +
+                            " minutes (" +consultation.getPrice() + "lv.)");
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
             appointmentDto.setDateTime(a.getDateTime().format(formatter));
