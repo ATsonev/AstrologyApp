@@ -497,23 +497,30 @@
             },
             body: new URLSearchParams({ username, password })
         })
-            .then(response => {
-                if (response.ok) {
-                    return response.text();
-                } else {
-                    return response.json().then(data => {
-                        throw new Error(data.message || 'Login failed. Please try again.');
-                    });
-                }
-            })
-            .then(() => {
-                closeModal();
-                window.location.reload();
-            })
-            .catch(error => {
-                console.error('Error logging in:', error);
-                document.getElementById('login-error-message').textContent = error.message;
-            });
+                .then(response => {
+                    if (response.redirected) {
+                        const url = new URL(response.url);
+                        const error = url.searchParams.get('error');
+                        if (error) {
+                            throw new Error(decodeURIComponent(error));
+                        }
+                    }
+                    if (response.ok) {
+                        return response.text();
+                    } else {
+                        return response.json().then(data => {
+                            throw new Error(data.message || 'Login failed. Please try again.');
+                        });
+                    }
+                })
+                .then(() => {
+                    closeModal();
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Error logging in:', error);
+                    document.getElementById('login-error-message').textContent = error.message;
+                });
     });
 </script>
 </body>

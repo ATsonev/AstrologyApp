@@ -66,5 +66,10 @@ public class UserController {
         return "redirect:/";
     }
 
+    @GetMapping("/edit-profile")
+    public String editProfile(Model model){
+        return "/edit-profile";
+    }
+
 
 }
