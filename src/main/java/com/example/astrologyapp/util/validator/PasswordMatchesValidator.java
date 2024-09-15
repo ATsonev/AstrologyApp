@@ -1,6 +1,6 @@
 package com.example.astrologyapp.util.validator;
 
-import com.example.astrologyapp.model.dto.RegisterUserDto;
+import com.example.astrologyapp.model.dto.userDto.RegisterUserDto;
 import com.example.astrologyapp.util.annotation.PasswordMatches;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

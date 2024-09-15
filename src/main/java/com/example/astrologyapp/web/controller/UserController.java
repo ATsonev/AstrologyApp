@@ -1,7 +1,8 @@
 package com.example.astrologyapp.web.controller;
 
-import com.example.astrologyapp.model.dto.LoginDto;
-import com.example.astrologyapp.model.dto.RegisterUserDto;
+import com.example.astrologyapp.model.dto.userDto.EdiUserDto;
+import com.example.astrologyapp.model.dto.userDto.LoginDto;
+import com.example.astrologyapp.model.dto.userDto.RegisterUserDto;
 import com.example.astrologyapp.service.UserService;
 import com.example.astrologyapp.util.customException.ExistingUserException;
 import jakarta.validation.Valid;
@@ -68,6 +69,8 @@ public class UserController {
 
     @GetMapping("/edit-profile")
     public String editProfile(Model model){
+        EdiUserDto dto = userService.getUserProfile();
+        model.addAttribute("dto", dto);
         return "/edit-profile";
     }
 

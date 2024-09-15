@@ -1,4 +1,4 @@
-package com.example.astrologyapp.model.dto;
+package com.example.astrologyapp.model.dto.userDto;
 
 import org.hibernate.validator.constraints.Length;
 

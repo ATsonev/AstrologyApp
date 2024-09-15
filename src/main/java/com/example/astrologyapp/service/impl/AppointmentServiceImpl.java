@@ -4,7 +4,6 @@ import com.example.astrologyapp.model.Appointment;
 import com.example.astrologyapp.model.Consultation;
 import com.example.astrologyapp.model.User;
 import com.example.astrologyapp.model.dto.AppointmentDto;
-import com.example.astrologyapp.model.dto.ConsultationDto;
 import com.example.astrologyapp.model.dto.ShowAppointmentsDto;
 import com.example.astrologyapp.model.enums.ConsultationStatus;
 import com.example.astrologyapp.model.enums.Location;
@@ -12,10 +11,8 @@ import com.example.astrologyapp.repository.AppointmentRepository;
 import com.example.astrologyapp.repository.ConsultationRepository;
 import com.example.astrologyapp.repository.UserRepository;
 import com.example.astrologyapp.service.AppointmentService;
+import com.example.astrologyapp.util.AppUtil;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -25,19 +22,20 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
     private final ConsultationRepository consultationRepository;
+    private final AppUtil appUtil;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, ConsultationRepository consultationRepository, UserRepository userRepository, ModelMapper modelMapper) {
+    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, ConsultationRepository consultationRepository, AppUtil appUtil, UserRepository userRepository, ModelMapper modelMapper) {
         this.appointmentRepository = appointmentRepository;
         this.consultationRepository = consultationRepository;
+        this.appUtil = appUtil;
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
     }
@@ -88,7 +86,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setDateTime(localDateTime);
         appointment.setDateTimeMade(LocalDateTime.now());
 
-        User user = getCurrentUser();
+        User user = appUtil.getCurrentUser();
         appointment.setUser(user);
 
         appointmentRepository.save(appointment);
@@ -96,7 +94,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public List<ShowAppointmentsDto> getAppointmentForUser() {
-        User currentUser = getCurrentUser();
+        User currentUser = appUtil.getCurrentUser();
         List<Appointment> allByUser = appointmentRepository.findAllByUser(currentUser);
 
         return allByUser.stream().map(a -> {
@@ -110,23 +108,6 @@ public class AppointmentServiceImpl implements AppointmentService {
             appointmentDto.setDateTimeMade(a.getDateTimeMade().format(formatter));
             return appointmentDto;
         }).toList();
-    }
-
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = null;
-
-        if (authentication != null) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof UserDetails) {
-                email = ((UserDetails) principal).getUsername();
-            } else {
-                email = principal.toString();
-            }
-        }
-
-        User user = userRepository.findByEmail(email).orElseThrow(NoSuchElementException::new);
-        return user;
     }
 
     public List<LocalTime> getAvailableSlots(List<LocalTime> slots, int duration){

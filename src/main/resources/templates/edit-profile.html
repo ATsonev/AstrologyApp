@@ -4,11 +4,81 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/style.css">
     <title>Title</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .form-content {
+            max-width: 80vw;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /*.content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }*/
+
+        .content label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .content input {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .content button {
+            align-self: flex-start;
+            padding: 10px 20px;
+            border: none;
+            background-color: #212f3c;
+            color: white;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .content button:hover {
+            background-color: #8db4c4;
+        }
+    </style>
 </head>
 <body>
 <header th:replace="fragments/header::header"></header>
-<main class="main-content">
+<main class="form-content">
+    <form class="content" th:object="${dto}" th:method="POST" th:action="@{/edit-profile}">
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" name="firstName" th:field="*{firstName}" required>
 
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" name="lastName" th:field="*{lastName}" required>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" th:field="*{email}" required>
+
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" name="phone" th:field="*{phone}" required>
+
+        <label for="skype">Skype</label>
+        <input type="text" id="skype" name="skype" th:field="*{skype}" required>
+
+        <button type="submit">Submit</button>
+    </form>
 </main>
 <footer th:replace="fragments/footer::footer"></footer>
 </body>

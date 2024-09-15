@@ -1,4 +1,4 @@
-package com.example.astrologyapp.model.dto;
+package com.example.astrologyapp.model.dto.userDto;
 
 import com.example.astrologyapp.util.annotation.PasswordMatches;
 import jakarta.validation.constraints.Email;
@@ -13,20 +13,20 @@ import java.time.LocalDateTime;
 public class RegisterUserDto{
 
     @NotBlank(message = "The first name cannot be empty")
-    @Length(min = 3, max = 50, message = "The first name should be between 3 and 50 characters")
+    @Length(min = 2, max = 50, message = "The first name should be between 2 and 50 characters")
     private String firstName;
     @NotBlank(message = "The last name should be atleast 3 characters")
-    @Length(min = 3, max = 50, message = "The last name should be between 3 and 50 characters")
+    @Length(min = 2, max = 50, message = "The last name should be between 2 and 50 characters")
     private String lastName;
     @Email
+    @NotBlank
     private String email;
     @Length(min = 5, max = 18, message = "The phone length should be between 5 and 18 numbers")
     @Pattern(regexp = "^\\+\\d+$", message = "Phone must start with + and contain only numbers")
     /*@Pattern(regexp = "\\d+", message = "Phone must contain only numbers")*/
     private String phone;
+    private String skype;
     private String cityOfBirth;
-    @Past(message = "The date and hour of birth should be in the past")
-    private LocalDateTime dateAndHourOfBirth;
     @Length(min = 5, max = 20, message = "The password length should be between 5 and 20 characters")
     private String password;
     private String confirmPassword;
@@ -79,19 +79,19 @@ public class RegisterUserDto{
         this.confirmPassword = confirmPassword;
     }
 
+    public String getSkype() {
+        return skype;
+    }
+
+    public void setSkype(String skype) {
+        this.skype = skype;
+    }
+
     public String getCityOfBirth() {
         return cityOfBirth;
     }
 
     public void setCityOfBirth(String cityOfBirth) {
         this.cityOfBirth = cityOfBirth;
-    }
-
-    public LocalDateTime getDateAndHourOfBirth() {
-        return dateAndHourOfBirth;
-    }
-
-    public void setDateAndHourOfBirth(LocalDateTime dateAndHourOfBirth) {
-        this.dateAndHourOfBirth = dateAndHourOfBirth;
     }
 }

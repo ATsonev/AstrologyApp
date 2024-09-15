@@ -143,10 +143,10 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="dateAndHourOfBirth">Date and hour of birth (optional)</label>
-                <input id="dateAndHourOfBirth" name="dateAndHourOfBirth" th:value="*{dateAndHourOfBirth}">
-                <div th:if="${#fields.hasErrors('dateAndHourOfBirth')}" th:errors="*{dateAndHourOfBirth}"
-                     class="error">Date and hour of birth Error
+                <label for="skype">Skype (optional)</label>
+                <input type="text" id="skype" name="skype" th:value="*{skype}">
+                <div th:if="${#fields.hasErrors('skype')}" th:errors="*{skype}"
+                     class="error">Skype
                 </div>
             </div>
         </div>
@@ -171,12 +171,5 @@
 </div>
 <footer th:replace="fragments/footer :: footer"></footer>
 
-<script>
-    flatpickr("#dateAndHourOfBirth", {
-        enableTime: true,
-        dateFormat: "Y-m-d H:i",
-        time_24hr: true
-    });
-</script>
 </body>
 </html>
