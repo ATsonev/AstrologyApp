@@ -1,5 +1,6 @@
 package com.example.astrologyapp.web.controller;
 
+import com.example.astrologyapp.model.dto.userDto.ChangePasswordDto;
 import com.example.astrologyapp.model.dto.userDto.EdiUserDto;
 import com.example.astrologyapp.model.dto.userDto.LoginDto;
 import com.example.astrologyapp.model.dto.userDto.RegisterUserDto;
@@ -69,9 +70,41 @@ public class UserController {
 
     @GetMapping("/edit-profile")
     public String editProfile(Model model){
-        EdiUserDto dto = userService.getUserProfile();
-        model.addAttribute("dto", dto);
+        if(!model.containsAttribute("dto")){
+            EdiUserDto dto = userService.getUserProfile();
+            model.addAttribute("dto", dto);
+        }
+        if(!model.containsAttribute("changePasswordDto")){
+            model.addAttribute("changePasswordDto", new ChangePasswordDto());
+        }
         return "/edit-profile";
+    }
+
+    @PostMapping("/edit-profile")
+    public String submitEditProfile(@Valid EdiUserDto ediUserDto,
+                                    BindingResult bindingResult, RedirectAttributes redirectAttributes){
+        if(bindingResult.hasErrors()){
+            redirectAttributes.addFlashAttribute("dto", ediUserDto);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.dto", bindingResult);
+            return "redirect:/edit-profile";
+        }
+        userService.editUserProfile(ediUserDto);
+        return "redirect:/edit-profile";
+    }
+
+    @PostMapping("/change-password")
+    public String changePassword(@Valid ChangePasswordDto changePasswordDto,
+                                 BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.changePasswordDto", bindingResult);
+            return "redirect:/edit-profile";
+        }
+        String result = userService.changePassord(changePasswordDto);
+        if(result.equals("Current password doesn't match")){
+            redirectAttributes.addFlashAttribute("errorMessage", result);
+            return "redirect:/edit-profile";
+        }
+        return "redirect:/profile";
     }
 
 

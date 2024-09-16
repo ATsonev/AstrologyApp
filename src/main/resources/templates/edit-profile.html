@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/style.css">
-    <title>Title</title>
+    <title>Edit Profile</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,36 +13,32 @@
         }
 
         .form-content {
-            max-width: 80vw;
+            width: 80vw;
             margin: 20px auto;
             padding: 20px;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
         }
-
-        /*.content {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }*/
 
         .content label {
             font-weight: bold;
             margin-bottom: 5px;
             color: #333;
+            display: block;
         }
 
         .content input {
-            width: 80%;
+            width: 98%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 16px;
+            margin-bottom: 15px;
         }
 
         .content button {
-            align-self: flex-start;
             padding: 10px 20px;
             border: none;
             background-color: #212f3c;
@@ -56,6 +52,11 @@
         .content button:hover {
             background-color: #8db4c4;
         }
+
+        .error {
+            color: red;
+            margin-bottom: 8px;
+        }
     </style>
 </head>
 <body>
@@ -64,20 +65,53 @@
     <form class="content" th:object="${dto}" th:method="POST" th:action="@{/edit-profile}">
         <label for="firstName">First Name</label>
         <input type="text" id="firstName" name="firstName" th:field="*{firstName}" required>
+        <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"
+             class="error">FirstName
+        </div>
 
         <label for="lastName">Last Name</label>
         <input type="text" id="lastName" name="lastName" th:field="*{lastName}" required>
+        <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"
+             class="error">LastName
+        </div>
 
         <label for="email">Email</label>
         <input type="email" id="email" name="email" th:field="*{email}" required>
+        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+             class="error">Email
+        </div>
 
-        <label for="phone">Phone</label>
+        <label for="phone">Phone number</label>
         <input type="tel" id="phone" name="phone" th:field="*{phone}" required>
+        <div th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"
+             class="error">Phone
+        </div>
 
         <label for="skype">Skype</label>
         <input type="text" id="skype" name="skype" th:field="*{skype}" required>
+        <div th:if="${#fields.hasErrors('skype')}" th:errors="*{skype}"
+             class="error">Skype
+        </div>
 
-        <button type="submit">Submit</button>
+        <button type="submit">Save</button>
+    </form>
+
+    <form class="content" th:object="${passwordDto}" th:method="POST" th:action="@{/change-password}">
+        <h2>Change Password</h2>
+
+        <label for="currentPassword">Current Password</label>
+        <input type="password" id="currentPassword" name="currentPassword" th:field="*{currentPassword}" required>
+        <div th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}" class="error">Current Password Error</div>
+
+        <label for="newPassword">New Password</label>
+        <input type="password" id="newPassword" name="newPassword" th:field="*{newPassword}" required>
+        <div th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}" class="error">New Password Error</div>
+
+        <label for="confirmNewPassword">Confirm New Password</label>
+        <input type="password" id="confirmNewPassword" name="confirmNewPassword" th:field="*{confirmNewPassword}" required>
+        <div th:if="${#fields.hasErrors('confirmNewPassword')}" th:errors="*{confirmNewPassword}" class="error">Confirm Password Error</div>
+
+        <button type="submit">Change Password</button>
     </form>
 </main>
 <footer th:replace="fragments/footer::footer"></footer>

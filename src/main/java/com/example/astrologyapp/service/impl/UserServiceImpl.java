@@ -1,6 +1,7 @@
 package com.example.astrologyapp.service.impl;
 
 import com.example.astrologyapp.model.User;
+import com.example.astrologyapp.model.dto.userDto.ChangePasswordDto;
 import com.example.astrologyapp.model.dto.userDto.EdiUserDto;
 import com.example.astrologyapp.model.dto.userDto.RegisterUserDto;
 import com.example.astrologyapp.model.enums.UserRole;
@@ -52,5 +53,28 @@ public class UserServiceImpl implements UserService {
     public EdiUserDto getUserProfile() {
         User currentUser = appUtil.getCurrentUser();
         return modelMapper.map(currentUser, EdiUserDto.class);
+    }
+
+    @Override
+    public void editUserProfile(EdiUserDto ediUserDto) {
+        User currentUser = appUtil.getCurrentUser();
+        currentUser.setFirstName(ediUserDto.getFirstName());
+        currentUser.setLastName(ediUserDto.getLastName());
+        currentUser.setEmail(ediUserDto.getEmail());
+        currentUser.setPhone(ediUserDto.getPhone());
+        currentUser.setSkype(ediUserDto.getSkype());
+
+        userRepository.save(currentUser);
+    }
+
+    @Override
+    public String changePassord(ChangePasswordDto changePasswordDto) {
+        User currentUser = appUtil.getCurrentUser();
+        if(!passwordEncoder.matches(changePasswordDto.getCurrentPassword(), currentUser.getPassword())){
+            return "Current password doesn't match";
+        }else {
+            currentUser.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
+            return "Password changed";
+        }
     }
 }
