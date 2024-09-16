@@ -15,11 +15,24 @@
         .form-content {
             width: 80vw;
             margin: 20px auto;
-            padding: 20px;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             box-sizing: border-box;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .form-content h2 {
+            background-color: #212f3c;
+            color: white;
+            padding: 10px;
+            margin: 0;
+            text-align: left;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
         }
 
         .content label {
@@ -57,12 +70,44 @@
             color: red;
             margin-bottom: 8px;
         }
+
+        .notification {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            width: 260px;
+            font-size: 20px;
+            height: 60px;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .notification.success {
+            background-color: #00d26a;
+        }
+
+        .notification.error {
+            background-color: #f44336;
+        }
+
+        .notification .emoji {
+            margin-right: 5px;
+            font-size: 28px;
+            color: white;
+        }
     </style>
 </head>
 <body>
 <header th:replace="fragments/header::header"></header>
+<input type="hidden" id="errorMessage" th:value="${errorMessage}">
+<input type="hidden" id="successMessage" th:value="${successMessage}">
 <main class="form-content">
-    <form class="content" th:object="${dto}" th:method="POST" th:action="@{/edit-profile}">
+    <h2>Profile</h2>
+    <form id ="profileForm" class="content" th:object="${dto}" th:method="POST" th:action="@{/edit-profile}">
+
         <label for="firstName">First Name</label>
         <input type="text" id="firstName" name="firstName" th:field="*{firstName}" required>
         <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"
@@ -95,9 +140,10 @@
 
         <button type="submit">Save</button>
     </form>
-
-    <form class="content" th:object="${passwordDto}" th:method="POST" th:action="@{/change-password}">
-        <h2>Change Password</h2>
+</main>
+<div class="form-content">
+    <h2>Change Password</h2>
+    <form class="content" th:object="${changePasswordDto}" th:method="POST" th:action="@{/change-password}">
 
         <label for="currentPassword">Current Password</label>
         <input type="password" id="currentPassword" name="currentPassword" th:field="*{currentPassword}" required>
@@ -109,11 +155,42 @@
 
         <label for="confirmNewPassword">Confirm New Password</label>
         <input type="password" id="confirmNewPassword" name="confirmNewPassword" th:field="*{confirmNewPassword}" required>
-        <div th:if="${#fields.hasErrors('confirmNewPassword')}" th:errors="*{confirmNewPassword}" class="error">Confirm Password Error</div>
+
+        <div style="text-align: center" th:if="${#fields.hasErrors('confirmNewPassword')}" th:errors="*{confirmNewPassword}"
+             class="error">ConfirmPassword Error
+        </div>
 
         <button type="submit">Change Password</button>
     </form>
-</main>
+</div>
+<div id="notification" class="notification"></div>
 <footer th:replace="fragments/footer::footer"></footer>
+
+<script>
+    function showNotification(message, type) {
+        const notificationElement = document.getElementById('notification');
+
+        const emoji = type === 'success' ? '✅' : 'x';
+
+        notificationElement.innerHTML = `<span class="emoji">${emoji}</span>${message}`;
+        notificationElement.className =`notification ${type}`;
+        notificationElement.style.display = 'block';
+
+        setTimeout(() => {
+            notificationElement.style.display = 'none';
+        }, 5000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const successMessage = document.getElementById('successMessage').value;
+        const errorMessage = document.getElementById('errorMessage').value;
+
+        if (successMessage) {
+            showNotification(successMessage, 'success');
+        } else if (errorMessage) {
+            showNotification(errorMessage, 'error');
+        }
+    });
+</script>
 </body>
 </html>

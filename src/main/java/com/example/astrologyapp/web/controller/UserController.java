@@ -10,9 +10,12 @@ import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.Optional;
 
 @Controller
 public class UserController {
@@ -86,9 +89,11 @@ public class UserController {
         if(bindingResult.hasErrors()){
             redirectAttributes.addFlashAttribute("dto", ediUserDto);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.dto", bindingResult);
+            redirectAttributes.addFlashAttribute("errorMessage", "Something went wrong");
             return "redirect:/edit-profile";
         }
         userService.editUserProfile(ediUserDto);
+        redirectAttributes.addFlashAttribute("successMessage", "Profile is successfully edited");
         return "redirect:/edit-profile";
     }
 
@@ -96,15 +101,19 @@ public class UserController {
     public String changePassword(@Valid ChangePasswordDto changePasswordDto,
                                  BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.changePasswordDto", bindingResult);
+            redirectAttributes.addFlashAttribute("changePasswordDto", changePasswordDto);
+            ObjectError objectError = bindingResult.getAllErrors().stream().findFirst().get();
+            String error = objectError.getDefaultMessage();
+            redirectAttributes.addFlashAttribute("errorMessage", error);
             return "redirect:/edit-profile";
         }
-        String result = userService.changePassord(changePasswordDto);
+        String result = userService.changePassword(changePasswordDto);
         if(result.equals("Current password doesn't match")){
             redirectAttributes.addFlashAttribute("errorMessage", result);
             return "redirect:/edit-profile";
         }
-        return "redirect:/profile";
+        redirectAttributes.addFlashAttribute("successMessage", result);
+        return "redirect:/edit-profile";
     }
 
 

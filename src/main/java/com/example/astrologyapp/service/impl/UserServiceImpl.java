@@ -68,13 +68,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String changePassord(ChangePasswordDto changePasswordDto) {
+    public String changePassword(ChangePasswordDto changePasswordDto) {
         User currentUser = appUtil.getCurrentUser();
         if(!passwordEncoder.matches(changePasswordDto.getCurrentPassword(), currentUser.getPassword())){
             return "Current password doesn't match";
         }else {
             currentUser.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
-            return "Password changed";
+            userRepository.save(currentUser);
+            return "Password successfully changed";
         }
     }
 }

@@ -31,7 +31,7 @@ public class ChangePasswordMatchesValidator implements ConstraintValidator<Chang
         if (!isValid) {
             context.unwrap(HibernateConstraintValidatorContext.class)
                     .buildConstraintViolationWithTemplate(message)
-                    .addPropertyNode("confirmPassword")
+                    .addPropertyNode("confirmNewPassword")
                     .addConstraintViolation()
                     .disableDefaultConstraintViolation();
         }

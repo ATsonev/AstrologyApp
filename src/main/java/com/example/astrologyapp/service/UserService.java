@@ -12,5 +12,5 @@ public interface UserService {
 
     void editUserProfile(EdiUserDto ediUserDto);
 
-    String changePassord(ChangePasswordDto changePasswordDto);
+    String changePassword(ChangePasswordDto changePasswordDto);
 }

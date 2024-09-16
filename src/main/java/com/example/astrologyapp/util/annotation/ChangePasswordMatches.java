@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ChangePasswordMatches {
-    String message() default "Passwords do not match";
+    String message() default "Confirm password doesn't match the new password";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
