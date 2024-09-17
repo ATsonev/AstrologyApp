@@ -1,10 +1,126 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Contacts</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .form-content {
+            width: 70vw;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+
+        .contact-form h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .full-width input,
+        .full-width textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+
+        .inline {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .half-width {
+            flex: 1;
+        }
+
+        .half-width input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .submit-btn {
+            width: 100px;
+            padding: 10px;
+            background-color: #212f3c;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .submit-btn:hover {
+            background-color: #8db4c4;
+        }
+
+        .error {
+            color: red;
+            margin-top: 8px;
+        }
+
+    </style>
 </head>
 <body>
-
+<header th:replace="fragments/header::header"></header>
+<main class="form-content">
+    <section class="contact-form">
+        <form th:object="${contactDto}"
+              th:action="@{/contacts}"
+              th:method="POST">
+            <div class="form-group full-width">
+                <label for="name">Name*:</label>
+                <input type="text" id="name" name="name" required>
+                <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+                     class="error">Name Error
+                </div>
+            </div>
+            <div class="form-group inline">
+                <div class="half-width">
+                    <label for="email">Email*:</label>
+                    <input type="email" id="email" name="email"
+                           th:classappend="${#fields.hasErrors('email')} ? 'input-error' : ''" required>
+                    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                         class="error">Email Error
+                    </div>
+                </div>
+                <div class="half-width">
+                    <label for="phone">Phone:</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+            </div>
+            <div class="form-group full-width">
+                <label for="message">Message*:</label>
+                <textarea id="message" name="message" rows="10" required></textarea>
+                <div th:if="${#fields.hasErrors('message')}" th:errors="*{message}"
+                     class="error">Message Error
+                </div>
+            </div>
+            <button type="submit" class="submit-btn">Send</button>
+        </form>
+    </section>
+</main>
+<footer th:replace="fragments/footer::footer"></footer>
 </body>
 </html>

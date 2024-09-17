@@ -1,5 +1,6 @@
 package com.example.astrologyapp.web.controller;
 
+import com.example.astrologyapp.model.dto.ContactDto;
 import com.example.astrologyapp.model.dto.userDto.ChangePasswordDto;
 import com.example.astrologyapp.model.dto.userDto.EdiUserDto;
 import com.example.astrologyapp.model.dto.userDto.LoginDto;
@@ -14,8 +15,6 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.Optional;
 
 @Controller
 public class UserController {
@@ -114,6 +113,25 @@ public class UserController {
         }
         redirectAttributes.addFlashAttribute("successMessage", result);
         return "redirect:/edit-profile";
+    }
+
+    @GetMapping("/contacts")
+    public String contacts(Model model){
+        if(!model.containsAttribute("contactDto")){
+            model.addAttribute("contactDto", new ContactDto());
+        }
+        return "contacts";
+    }
+
+    @PostMapping("/contacts")
+    public String submitContact(@Valid ContactDto contactDto,
+                                BindingResult bindingResult, RedirectAttributes redirectAttributes){
+        if(bindingResult.hasErrors()){
+            redirectAttributes.addFlashAttribute("contactDto", contactDto);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.contactDto", bindingResult);
+            return "redirect:/contacts";
+        }
+        return "redirect:/contacts";
     }
 
 

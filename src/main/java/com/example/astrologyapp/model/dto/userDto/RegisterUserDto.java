@@ -18,8 +18,8 @@ public class RegisterUserDto{
     @NotBlank(message = "The last name should be atleast 3 characters")
     @Length(min = 2, max = 50, message = "The last name should be between 2 and 50 characters")
     private String lastName;
-    @Email
-    @NotBlank
+    @Email(message = "Please write valid email")
+    @NotBlank(message = "The email cannot be empty")
     private String email;
     @Length(min = 5, max = 18, message = "The phone length should be between 5 and 18 numbers")
     @Pattern(regexp = "^\\+\\d+$", message = "Phone must start with + and contain only numbers")
