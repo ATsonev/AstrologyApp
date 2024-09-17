@@ -18,12 +18,12 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class AppointmentsController {
+public class AppointmentController {
 
     private final AppointmentService appointmentService;
     private final ConsultationService consultationService;
 
-    public AppointmentsController(AppointmentService appointmentService, ConsultationService consultationService) {
+    public AppointmentController(AppointmentService appointmentService, ConsultationService consultationService) {
         this.appointmentService = appointmentService;
         this.consultationService = consultationService;
     }
