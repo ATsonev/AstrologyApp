@@ -5,6 +5,7 @@ import com.example.astrologyapp.model.dto.userDto.ChangePasswordDto;
 import com.example.astrologyapp.model.dto.userDto.EdiUserDto;
 import com.example.astrologyapp.model.dto.userDto.LoginDto;
 import com.example.astrologyapp.model.dto.userDto.RegisterUserDto;
+import com.example.astrologyapp.service.ContactService;
 import com.example.astrologyapp.service.UserService;
 import com.example.astrologyapp.util.customException.ExistingUserException;
 import jakarta.validation.Valid;
@@ -113,25 +114,6 @@ public class UserController {
         }
         redirectAttributes.addFlashAttribute("successMessage", result);
         return "redirect:/edit-profile";
-    }
-
-    @GetMapping("/contacts")
-    public String contacts(Model model){
-        if(!model.containsAttribute("contactDto")){
-            model.addAttribute("contactDto", new ContactDto());
-        }
-        return "contacts";
-    }
-
-    @PostMapping("/contacts")
-    public String submitContact(@Valid ContactDto contactDto,
-                                BindingResult bindingResult, RedirectAttributes redirectAttributes){
-        if(bindingResult.hasErrors()){
-            redirectAttributes.addFlashAttribute("contactDto", contactDto);
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.contactDto", bindingResult);
-            return "redirect:/contacts";
-        }
-        return "redirect:/contacts";
     }
 
 

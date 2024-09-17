@@ -1,6 +1,8 @@
 package com.example.astrologyapp.service.impl;
 
+import com.example.astrologyapp.model.Contact;
 import com.example.astrologyapp.model.User;
+import com.example.astrologyapp.model.dto.ContactDto;
 import com.example.astrologyapp.model.dto.userDto.ChangePasswordDto;
 import com.example.astrologyapp.model.dto.userDto.EdiUserDto;
 import com.example.astrologyapp.model.dto.userDto.RegisterUserDto;
@@ -78,4 +80,5 @@ public class UserServiceImpl implements UserService {
             return "Password successfully changed";
         }
     }
+
 }
