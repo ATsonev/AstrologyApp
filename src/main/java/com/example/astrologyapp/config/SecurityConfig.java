@@ -28,7 +28,7 @@ public class SecurityConfig {
                                 authorizeRequests
                                         .requestMatchers("/images/**", "/css/**", "/js/**").permitAll()
                                         .requestMatchers("/", "/login", "/register", "/error",
-                                                "/appointment", "/contacts", "/appointments").permitAll()
+                                                "/appointment", "/contacts", "/appointments", "/api/clients").permitAll()
                                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin ->

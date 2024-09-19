@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -80,5 +81,13 @@ public class UserServiceImpl implements UserService {
             return "Password successfully changed";
         }
     }
+
+    @Override
+    public List<EdiUserDto> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(u -> modelMapper.map(u, EdiUserDto.class))
+                .toList();
+    }
+
 
 }
